@@ -559,7 +559,11 @@ function clearForm() {
   document.getElementById('f-dob').value = '';
   document.getElementById('f-level').value = 'مبتدئ';
   document.getElementById('f-duration').value = '1';
-  document.getElementById('f-start').value = new Date().toISOString().split('T')[0];
+  // Unregister any old service workers
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
+document.getElementById('f-start').value = new Date().toISOString().split('T')[0];
 }
 
 function saveSwimmer() {
@@ -745,12 +749,14 @@ function showToast(msg) {
 }
 
 // ─── INIT ────────────────────────────────────────────────
+// Unregister any old service workers
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
 document.getElementById('f-start').value = new Date().toISOString().split('T')[0];
 updateStats(); updateCoachSelects(); renderList();
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+// service worker disabled
 </script>
 </body>
 </html>
