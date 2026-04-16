@@ -124,6 +124,29 @@ body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--tex
 .btn-secondary { width: 100%; padding: 11px; background: var(--surface); color: var(--text2); border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
 .required { color: var(--danger); }
 
+
+/* COACH CARDS */
+.coach-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.coach-card-top{display:flex;align-items:center;gap:12px}
+.coach-avatar{width:48px;height:48px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.coach-name{font-size:15px;font-weight:700}
+.coach-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.coach-card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.coach-badge{background:var(--primary-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.coach-actions{display:flex;gap:8px}
+.btn-sm{padding:6px 14px;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none}
+.btn-sm-edit{background:var(--primary-light);color:var(--primary)}
+.btn-sm-del{background:#fee2e2;color:var(--danger)}
+.coach-swimmers{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.coach-sw-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.coach-sw-item:last-child{border-bottom:none}
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:flex-end}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:16px 16px 40px}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:10px;margin:0 auto 14px}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;text-align:center}
+
 /* DETAIL SHEET */
 .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; }
 .sheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; z-index: 51; max-height: 90vh; overflow-y: auto; padding: 0 0 30px; transition: transform 0.3s ease; }
@@ -232,9 +255,7 @@ body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--tex
       <div class="form-section">
         <div class="form-section-title">بيانات التدريب</div>
         <div class="form-group"><label>المدرب</label>
-          <select id="f-coach">
-            <option>كابتن أحمد</option><option>كابتن محمد</option><option>كابتن سارة</option><option>كابتن علي</option>
-          </select>
+          <select id="f-coach"><option value="">-- اختر مدرب --</option></select>
         </div>
         <div class="form-row">
           <div class="form-group"><label>تاريخ الاشتراك <span class="required">*</span></label><input id="f-start" type="date"></div>
@@ -252,6 +273,16 @@ body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--tex
 
       <button class="btn-primary" onclick="saveSwimmer()">💾 حفظ السباح</button>
       <button class="btn-secondary" onclick="cancelForm()">إلغاء</button>
+    </div>
+
+
+    <!-- COACHES PANEL -->
+    <div class="panel" id="panel-coaches">
+      <button class="btn-primary" onclick="openCoachModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        إضافة مدرب جديد
+      </button>
+      <div id="coaches-list"></div>
     </div>
 
     <!-- REPORT PANEL -->
@@ -281,12 +312,31 @@ body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--tex
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
       <span>إضافة</span>
     </div>
+    <div class="nav-item" id="nav-coaches" onclick="switchTab('coaches')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="11" x2="12" y2="15"/><line x1="10" y1="13" x2="14" y2="13"/></svg>
+      <span>المدربون</span>
+    </div>
     <div class="nav-item" id="nav-report" onclick="switchTab('report')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>التقارير</span>
     </div>
   </nav>
 
+</div>
+
+
+<!-- COACH MODAL -->
+<div class="modal-ov" id="coach-modal" onclick="closeCoachModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="coach-modal-title">إضافة مدرب جديد</div>
+    <div class="form-group"><label>اسم المدرب <span class="required">*</span></label><input id="cm-name" type="text" placeholder="مثال: كابتن أحمد"></div>
+    <div class="form-group"><label>التخصص</label><input id="cm-spec" type="text" placeholder="مثال: سباحة حرة - ناشئين"></div>
+    <div class="form-group"><label>رقم التليفون</label><input id="cm-phone" type="tel" placeholder="01xxxxxxxxx"></div>
+    <div class="form-group"><label>الفرع</label><input id="cm-branch" type="text" placeholder="مثال: رويال بلازا"></div>
+    <button class="btn-primary" onclick="saveCoach()" style="margin-top:4px">💾 حفظ المدرب</button>
+    <button class="btn-secondary" onclick="document.getElementById('coach-modal').classList.remove('open')">إلغاء</button>
+  </div>
 </div>
 
 <!-- BOTTOM SHEET -->
@@ -307,6 +357,7 @@ let swimmers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let editId = null;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(swimmers)); }
+function saveSwimmers() { save(); }
 
 // ─── HELPERS ─────────────────────────────────────────────
 function calcAge(dob) {
@@ -349,12 +400,22 @@ function updateStats() {
 }
 
 // ─── LIST ────────────────────────────────────────────────
-function updateCoachFilter() {
-  const coaches = [...new Set(swimmers.map(s => s.coach).filter(Boolean))];
-  const sel = document.getElementById('filter-coach');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">كل المدربين</option>' + coaches.map(c => `<option${c===cur?' selected':''}>${c}</option>`).join('');
+// ─── COACHES DATA ────────────────────────────────────────
+const COACHES_KEY = 'wbt_coaches_v1';
+let coaches = JSON.parse(localStorage.getItem(COACHES_KEY) || '[]');
+let editCoachId = null;
+function saveCoaches() { localStorage.setItem(COACHES_KEY, JSON.stringify(coaches)); }
+
+function updateCoachSelects() {
+  const fc = document.getElementById('filter-coach');
+  const fcv = fc.value;
+  fc.innerHTML = '<option value="">كل المدربين</option>' + coaches.map(c => `<option${c.name===fcv?' selected':''}>${c.name}</option>`).join('');
+  const sc = document.getElementById('f-coach');
+  const scv = sc.value;
+  sc.innerHTML = '<option value="">-- اختر مدرب --</option>' + coaches.map(c => `<option${c.name===scv?' selected':''}>${c.name}</option>`).join('');
 }
+// keep old name as alias
+function updateCoachFilter() { updateCoachSelects(); }
 
 function renderList() {
   const q = document.getElementById('search-input').value.trim().toLowerCase();
@@ -464,24 +525,25 @@ function closeSheet() {
 function toggleAtt(id, idx) {
   const s = swimmers.find(x => x.id === id); if (!s) return;
   s.attendance[idx] = s.attendance[idx] ? 0 : 1;
-  save(); updateStats(); viewSwimmer(id);
+  saveSwimmers(); updateStats(); viewSwimmer(id);
 }
 
 function addAttendance(id) {
   const s = swimmers.find(x => x.id === id); if (!s) return;
   if (!s.attendance) s.attendance = [];
   s.attendance.push(1);
-  save(); updateStats(); viewSwimmer(id);
+  saveSwimmers(); updateStats(); viewSwimmer(id);
   showToast('تم تسجيل الحضور ✓');
 }
 
 // ─── FORM ────────────────────────────────────────────────
 function switchTab(tab) {
-  ['list','add','report'].forEach(t => {
+  ['list','add','coaches','report'].forEach(t => {
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
     document.getElementById('nav-' + t).classList.toggle('active', t === tab);
   });
-  if (tab === 'list') { renderList(); updateCoachFilter(); }
+  if (tab === 'list') { renderList(); updateCoachSelects(); }
+  if (tab === 'coaches') renderCoaches();
   if (tab === 'report') renderReport();
 }
 
@@ -521,7 +583,7 @@ function saveSwimmer() {
   };
   if (editId) { const i = swimmers.findIndex(s=>s.id===editId); swimmers[i]=data; }
   else swimmers.push(data);
-  save(); editId = null; clearForm();
+  saveSwimmers(); editId = null; clearForm();
   document.getElementById('form-mode-title').textContent = 'إضافة سباح جديد';
   updateStats(); updateCoachFilter();
   showToast('تم الحفظ بنجاح ✓');
@@ -552,7 +614,7 @@ function deleteSwimmer(id) {
   const s = swimmers.find(x=>x.id===id); if(!s) return;
   if (!confirm('هل تريد حذف ' + s.name + '؟')) return;
   swimmers = swimmers.filter(x=>x.id!==id);
-  save(); closeSheet(); updateStats(); updateCoachFilter(); renderList();
+  saveSwimmers(); closeSheet(); updateStats(); updateCoachSelects(); renderList();
   showToast('تم الحذف');
 }
 
@@ -590,6 +652,91 @@ function renderReport() {
   }).join('') : '<div style="color:var(--text3);font-size:13px;padding:8px 0">🎉 لا توجد اشتراكات تنتهي قريباً</div>';
 }
 
+
+// ─── COACHES FUNCTIONS ───────────────────────────────────
+function initials(name) {
+  const p = name.trim().split(' ');
+  return p.length >= 2 ? p[0][0] + p[1][0] : name.slice(0,2);
+}
+
+function renderCoaches() {
+  const el = document.getElementById('coaches-list');
+  if (!coaches.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🏅</div><div class="empty-text">لا يوجد مدربون بعد\nاضغط إضافة مدرب جديد</div></div>';
+    return;
+  }
+  el.innerHTML = coaches.map(c => {
+    const ms = swimmers.filter(s => s.coach === c.name);
+    const sl = ms.length ? ms.map(s => {
+      const bg = AVATAR_BG[s.level]||'#f1f5f9', clr = AVATAR_CLR[s.level]||'#475569';
+      return `<div class="coach-sw-item"><div class="avatar" style="width:28px;height:28px;font-size:11px;background:${bg};color:${clr}">${initials(s.name)}</div><span style="flex:1">${s.name}</span><span class="badge ${LEVEL_BADGE[s.level]||'badge-blue'}" style="font-size:10px;padding:2px 7px">${s.level}</span></div>`;
+    }).join('') : '<div style="font-size:12px;color:var(--text3);padding:6px 0">لا يوجد سباحون مرتبطون</div>';
+    return `<div class="coach-card">
+      <div class="coach-card-top">
+        <div class="coach-avatar">${initials(c.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="coach-name">${c.name}</div>
+          <div class="coach-meta">${c.spec||'مدرب سباحة'}${c.branch?' · '+c.branch:''}</div>
+          ${c.phone?`<div class="coach-meta">📞 ${c.phone}</div>`:''}
+        </div>
+      </div>
+      <div class="coach-card-bottom">
+        <span class="coach-badge">🏊 ${ms.length} سباح</span>
+        <div class="coach-actions">
+          <button class="btn-sm btn-sm-edit" onclick="openCoachModal('${c.id}')">تعديل</button>
+          <button class="btn-sm btn-sm-del" onclick="deleteCoach('${c.id}')">حذف</button>
+        </div>
+      </div>
+      <div class="coach-swimmers">${sl}</div>
+    </div>`;
+  }).join('');
+}
+
+function openCoachModal(id) {
+  editCoachId = id || null;
+  if (id) {
+    const c = coaches.find(x => x.id === id); if (!c) return;
+    document.getElementById('cm-name').value = c.name;
+    document.getElementById('cm-spec').value = c.spec||'';
+    document.getElementById('cm-phone').value = c.phone||'';
+    document.getElementById('cm-branch').value = c.branch||'';
+    document.getElementById('coach-modal-title').textContent = 'تعديل: ' + c.name;
+  } else {
+    ['cm-name','cm-spec','cm-phone','cm-branch'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('coach-modal-title').textContent = 'إضافة مدرب جديد';
+  }
+  document.getElementById('coach-modal').classList.add('open');
+}
+
+function closeCoachModal(e) {
+  if (e && e.target !== document.getElementById('coach-modal')) return;
+  document.getElementById('coach-modal').classList.remove('open');
+  editCoachId = null;
+}
+
+function saveCoach() {
+  const name = document.getElementById('cm-name').value.trim();
+  if (!name) { showToast('اسم المدرب مطلوب ⚠️'); return; }
+  const data = { id: editCoachId||uid(), name, spec: document.getElementById('cm-spec').value, phone: document.getElementById('cm-phone').value, branch: document.getElementById('cm-branch').value };
+  if (editCoachId) { const i = coaches.findIndex(c=>c.id===editCoachId); coaches[i]=data; }
+  else coaches.push(data);
+  saveCoaches(); editCoachId = null;
+  document.getElementById('coach-modal').classList.remove('open');
+  updateCoachSelects(); renderCoaches();
+  showToast('تم حفظ المدرب ✓');
+}
+
+function deleteCoach(id) {
+  const c = coaches.find(x=>x.id===id); if (!c) return;
+  const linked = swimmers.filter(s=>s.coach===c.name).length;
+  const msg = linked > 0 ? `المدرب مرتبط بـ ${linked} سباح. هل تريد الحذف؟` : `هل تريد حذف ${c.name}؟`;
+  if (!confirm(msg)) return;
+  if (linked > 0) { swimmers.forEach(s=>{if(s.coach===c.name)s.coach='';}); saveSwimmers(); }
+  coaches = coaches.filter(x=>x.id!==id);
+  saveCoaches(); updateCoachSelects(); renderCoaches();
+  showToast('تم حذف المدرب');
+}
+
 // ─── TOAST ───────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -599,12 +746,11 @@ function showToast(msg) {
 
 // ─── INIT ────────────────────────────────────────────────
 document.getElementById('f-start').value = new Date().toISOString().split('T')[0];
-updateStats(); updateCoachFilter(); renderList();
+updateStats(); updateCoachSelects(); renderList();
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
-<!-- v2 -->
 </body>
 </html>
