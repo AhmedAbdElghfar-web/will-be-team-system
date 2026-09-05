@@ -601,7 +601,9 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 // ─── INIT ────────────────────────────────────────────────
 document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
 // Kill any old service workers
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>regs.forEach(r=>r.unregister()));}
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW:',e));
+}
 loadAll();
 </script>
 </body>
