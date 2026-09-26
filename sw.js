@@ -5,13 +5,14 @@
 //   - Supabase / any API call : never cached, always network
 // Bump CACHE_VERSION on every deploy to purge old caches.
 
-const CACHE_VERSION = 'wbt-v3';
+const CACHE_VERSION = 'wbt-v4';
 const SHELL = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './logo.png'
 ];
 
 self.addEventListener('install', e => {
