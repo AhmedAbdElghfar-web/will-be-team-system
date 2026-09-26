@@ -2,609 +2,996 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0284c7">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A6E8F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Will Be Team">
 <title>أكاديمية Will Be Team</title>
 <link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#0284c7;--primary-dark:#0369a1;--primary-light:#e0f2fe;--success:#16a34a;--success-light:#dcfce7;--warning:#d97706;--danger:#dc2626;--danger-light:#fee2e2;--bg:#f0f9ff;--surface:#fff;--surface2:#f8fafc;--border:#e2e8f0;--text:#0f172a;--text2:#475569;--text3:#94a3b8;--radius:12px;--radius-sm:8px;--shadow:0 1px 3px rgba(0,0,0,0.08)}
+/* ── Tokens ───────────────────────────────────────────── */
+:root{
+  --tile:#EDF3F4; --tile-line:rgba(14,42,59,.055);
+  --surface:#FFFFFF; --surface-2:#F5F9FA;
+  --ink:#0E2A3B; --ink-2:#4B6473; --ink-3:#8AA0AC;
+  --line:#D8E4E8;
+  --pool:#0A6E8F; --pool-deep:#074F68; --pool-wash:#DDF0F5;
+  --rope-red:#D7263D; --rope-yellow:#F2B632; --rope-white:#FFFFFF;
+  --ok:#1F8A56; --ok-wash:#DDF3E6;
+  --warn:#B7791F; --warn-wash:#FBEFD6;
+  --bad:#C52238; --bad-wash:#FBE1E4;
+  --lv-1:#2BA7C4; --lv-2:#3A9D5D; --lv-3:#E0A526; --lv-4:#D7263D; --lv-5:#1B2A3A;
+  --r-lg:18px; --r-md:12px; --r-sm:8px;
+  --font:"Alexandria","Segoe UI","Tahoma",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --tile:#061B25; --tile-line:rgba(160,220,235,.045);
+    --surface:#0C2733; --surface-2:#0F303E;
+    --ink:#E4F0F3; --ink-2:#9DB6C0; --ink-3:#6A8793;
+    --line:#1B4150;
+    --pool:#3FB6D6; --pool-deep:#8ED6EA; --pool-wash:#0F3B4B;
+    --rope-white:#D9E6EA;
+    --ok:#4CC286; --ok-wash:#123A2A; --warn:#E9B45A; --warn-wash:#3A2E14; --bad:#F06478; --bad-wash:#3E1720;
+    --lv-5:#C9D8DE;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --tile:#061B25; --tile-line:rgba(160,220,235,.045);
+  --surface:#0C2733; --surface-2:#0F303E;
+  --ink:#E4F0F3; --ink-2:#9DB6C0; --ink-3:#6A8793;
+  --line:#1B4150;
+  --pool:#3FB6D6; --pool-deep:#8ED6EA; --pool-wash:#0F3B4B;
+  --rope-white:#D9E6EA;
+  --ok:#4CC286; --ok-wash:#123A2A; --warn:#E9B45A; --warn-wash:#3A2E14; --bad:#F06478; --bad-wash:#3E1720;
+  --lv-5:#C9D8DE;
+  color-scheme:dark;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:"Cairo",sans-serif;background:var(--bg);color:var(--text);font-size:14px}
-.app{display:flex;flex-direction:column;position:fixed;top:0;left:0;right:0;bottom:0}
-.topbar{background:var(--primary);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(2,132,199,0.3)}
-.topbar-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
-.topbar-sub{font-size:11px;opacity:0.8;margin-top:1px}
-.topbar-count{background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600}
-.content{flex:1;overflow-y:auto;padding:12px;-webkit-overflow-scrolling:touch}
-.bottom-nav{display:flex;background:var(--surface);border-bottom:2px solid var(--border);flex-shrink:0}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;cursor:pointer;color:var(--text3);gap:2px;border-bottom:3px solid transparent;margin-bottom:-2px}
-.nav-item.active{color:var(--primary);border-bottom-color:var(--primary)}
-.nav-item svg{width:20px;height:20px}
-.nav-item span{font-size:9px;font-weight:600}
-.panel{display:none}.panel.active{display:block}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat-card{background:var(--surface);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.stat-num{font-size:26px;font-weight:700;line-height:1}
-.stat-lbl{font-size:11px;color:var(--text2);margin-top:4px}
-.stat-card.blue .stat-num{color:var(--primary)}
-.stat-card.green .stat-num{color:var(--success)}
-.stat-card.amber .stat-num{color:var(--warning)}
-.stat-card.red .stat-num{color:var(--danger)}
-.search-wrap{position:relative;margin-bottom:10px}
-.search-wrap input{width:100%;padding:10px 40px 10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:"Cairo",sans-serif;font-size:14px;color:var(--text)}
-.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
-.filter-row{display:flex;gap:8px;margin-bottom:12px}
-.filter-row select{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:"Cairo",sans-serif;font-size:13px;color:var(--text)}
-.swimmer-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer}
-.swimmer-card-top{display:flex;align-items:center;gap:12px}
-.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
-.swimmer-name{font-size:15px;font-weight:700}
-.swimmer-meta{font-size:12px;color:var(--text2);margin-top:2px}
-.swimmer-card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-blue{background:#dbeafe;color:#1e40af}
-.badge-green{background:#dcfce7;color:#14532d}
-.badge-amber{background:#fef3c7;color:#78350f}
-.badge-red{background:#fee2e2;color:#7f1d1d}
-.badge-purple{background:#ede9fe;color:#4c1d95}
-.expiry-tag{font-size:11px;font-weight:600}
-.expiry-ok{color:var(--success)}.expiry-warn{color:var(--warning)}.expiry-exp{color:var(--danger)}
-.att-bar-wrap{display:flex;align-items:center;gap:6px}
-.att-bar{width:60px;height:5px;background:var(--border);border-radius:10px;overflow:hidden}
-.att-fill{height:100%;background:var(--primary);border-radius:10px}
-.att-pct{font-size:11px;color:var(--text2);font-weight:600}
-.empty-state{text-align:center;padding:50px 20px;color:var(--text3)}
-.empty-icon{font-size:48px;margin-bottom:12px}
-.empty-text{font-size:14px;white-space:pre-line}
-.form-section{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.form-section-title{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--primary-light)}
-.form-group{margin-bottom:12px}
-.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:14px;color:var(--text);background:var(--surface2)}
-.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);background:var(--surface)}
-.form-group textarea{resize:none;height:70px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-primary{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary:active{background:var(--primary-dark)}
-.btn-secondary{width:100%;padding:11px;background:var(--surface);color:var(--text2);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
-.required{color:var(--danger)}
-.coach-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.coach-card-top{display:flex;align-items:center;gap:12px}
-.coach-avatar{width:48px;height:48px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
-.coach-name{font-size:15px;font-weight:700}
-.coach-meta{font-size:12px;color:var(--text2);margin-top:2px}
-.coach-card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.coach-badge{background:var(--primary-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
-.coach-actions{display:flex;gap:8px}
-.btn-sm{padding:6px 14px;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none}
-.btn-sm-edit{background:var(--primary-light);color:var(--primary)}
-.btn-sm-del{background:#fee2e2;color:var(--danger)}
-.coach-swimmers{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.coach-sw-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
-.coach-sw-item:last-child{border-bottom:none}
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:50;display:none}
-.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:51;max-height:90vh;overflow-y:auto;padding:0 0 30px;display:none}
-.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:10px;margin:12px auto 16px}
-.sheet-header{padding:0 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.sheet-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0}
-.sheet-name{font-size:17px;font-weight:700}
-.sheet-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.sheet-body{padding:16px}
-.detail-group{margin-bottom:16px}
-.detail-group-title{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
-.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
-.detail-row:last-child{border-bottom:none}
-.detail-lbl{color:var(--text2)}
-.detail-val{font-weight:600;text-align:left}
-.sheet-actions{display:flex;gap:8px;padding:0 16px;margin-top:8px}
-.btn-edit{flex:1;padding:11px;background:var(--primary-light);color:var(--primary);border:none;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:14px;font-weight:700;cursor:pointer}
-.btn-delete{padding:11px 16px;background:#fee2e2;color:var(--danger);border:none;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:14px;font-weight:700;cursor:pointer}
-.btn-attend{padding:13px;background:var(--success);color:#fff;border:none;border-radius:var(--radius-sm);font-family:"Cairo",sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin:12px 16px 0;width:calc(100% - 32px);display:block}
-.att-grid-title{font-size:11px;font-weight:700;color:var(--primary);margin:16px 0 8px}
-.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.att-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer}
-.att-cell.present{background:#dcfce7;color:var(--success);border:1px solid #86efac}
-.att-cell.absent{background:#fee2e2;color:var(--danger);border:1px solid #fca5a5}
-.att-legend{display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text2)}
-.att-legend span{display:flex;align-items:center;gap:4px}
-.att-dot{width:10px;height:10px;border-radius:3px}
-.report-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.report-card-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px}
-.dist-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.dist-label{font-size:12px;min-width:80px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dist-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:10px;overflow:hidden}
-.dist-bar{height:100%;border-radius:10px}
-.dist-count{font-size:12px;color:var(--text2);min-width:20px;text-align:center;font-weight:700}
-.expiry-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-.expiry-item:last-child{border-bottom:none}
-.expiry-name{font-size:13px;font-weight:600}
-.expiry-coach-lbl{font-size:11px;color:var(--text2)}
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:flex-end}
-.modal-ov.open{display:flex}
-.modal-box{background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:16px 16px 40px}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:10px;margin:0 auto 14px}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;text-align:center}
-.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--primary-light);z-index:999;display:none}
-.loading-bar-fill{height:100%;background:var(--primary);width:0;transition:width 0.3s;border-radius:0 3px 3px 0}
-.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.sync-indicator{font-size:11px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:4px}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:#4ade80}
-.sync-dot.syncing{background:#fbbf24;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-::-webkit-scrollbar{width:0}
+html,body{height:100%}
+body{
+  font-family:var(--font);font-size:15px;line-height:1.55;color:var(--ink);
+  background-color:var(--tile);
+  /* pool-tile grid */
+  background-image:
+    linear-gradient(var(--tile-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--tile-line) 1px,transparent 1px);
+  background-size:26px 26px;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+:focus-visible{outline:2.5px solid var(--pool);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.app{display:flex;flex-direction:column;height:100%;max-width:640px;margin:0 auto;position:relative}
+
+/* ── Deck header with lane rope ───────────────────────── */
+.deck{
+  background:var(--pool-deep);color:#fff;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 16px;
+  position:relative;flex-shrink:0;
+}
+:root[data-theme="dark"] .deck{background:#04141C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .deck{background:#04141C}}
+.deck-row{display:flex;align-items:center;gap:12px}
+.brand{flex:1;min-width:0}
+.brand-name{font-size:21px;font-weight:800;letter-spacing:-.01em;line-height:1.15;direction:ltr;text-align:right}
+.brand-sub{font-size:12.5px;opacity:.78;font-weight:400}
+.sync{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.85}
+.sync i{width:7px;height:7px;border-radius:50%;background:#5BE39A;display:block}
+.sync.busy i{background:var(--rope-yellow);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff}
+.icon-btn svg{width:19px;height:19px}
+/* lane rope: float discs alternating red / white / yellow */
+.rope{
+  position:absolute;left:0;right:0;bottom:-7px;height:14px;z-index:5;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.55) 0 2px,transparent 2.5px) 0 0/14px 14px,
+    repeating-linear-gradient(90deg,
+      var(--rope-red) 0 12px,transparent 12px 14px,
+      var(--rope-red) 14px 26px,transparent 26px 28px,
+      var(--rope-white) 28px 40px,transparent 40px 42px,
+      var(--rope-yellow) 42px 54px,transparent 54px 56px);
+  -webkit-mask:radial-gradient(ellipse 6px 7px at 7px 7px,#000 98%,transparent) 0 0/14px 14px;
+          mask:radial-gradient(ellipse 6px 7px at 7px 7px,#000 98%,transparent) 0 0/14px 14px;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));
+}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;overflow:hidden;opacity:0;transition:opacity .2s}
+.progress.on{opacity:1}
+.progress::after{content:"";position:absolute;inset:0;width:40%;background:var(--rope-yellow);animation:swim 1.1s ease-in-out infinite}
+@keyframes swim{from{transform:translateX(160%)}to{transform:translateX(-260%)}}
+
+/* ── Scroll area & views ─────────────────────────────── */
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px 14px calc(96px + env(safe-area-inset-bottom,0px))}
+.view{display:none}
+.view.on{display:block;animation:surface .28s ease-out}
+@keyframes surface{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view.on{animation:none}.progress::after{animation:none}}
+.h2{font-size:18px;font-weight:700;margin:4px 4px 12px}
+.muted{color:var(--ink-2)}
+.small{font-size:12.5px}
+
+/* ── Today: pace clock hero ───────────────────────────── */
+.today{
+  display:grid;grid-template-columns:132px 1fr;gap:16px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:18px;
+}
+.clock{width:132px;height:132px;position:relative}
+.clock svg{width:100%;height:100%;display:block}
+.clock-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.clock-big{direction:ltr;font-size:30px;font-weight:800;line-height:1;color:var(--ink)}
+.clock-small{font-size:11.5px;color:var(--ink-2);margin-top:4px}
+.today-day{font-size:24px;font-weight:800;line-height:1.2}
+.today-date{font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.today-facts{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:500;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+.chip b{font-weight:700;color:var(--ink)}
+.chip.ok{background:var(--ok-wash);border-color:transparent;color:var(--ok)}
+.chip.warn{background:var(--warn-wash);border-color:transparent;color:var(--warn)}
+.chip.bad{background:var(--bad-wash);border-color:transparent;color:var(--bad)}
+
+/* ── Lanes (swimmer rows) ─────────────────────────────── */
+.lanes{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lane{
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  padding:12px 14px 12px 12px;position:relative;width:100%;text-align:right;
+}
+.lane + .lane{border-top:1px dashed var(--line)}
+button.lane:hover{background:var(--surface-2)}
+/* pool-floor "T" lane marker in the level colour */
+.t-mark{width:14px;align-self:stretch;position:relative;min-height:40px}
+.t-mark::before{content:"";position:absolute;top:4px;bottom:4px;right:5px;width:4px;border-radius:2px;background:var(--lv,var(--lv-1))}
+.t-mark::after{content:"";position:absolute;bottom:4px;right:0;width:14px;height:4px;border-radius:2px;background:var(--lv,var(--lv-1))}
+.lane-name{font-weight:600;font-size:15.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lane-meta{font-size:12.5px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.laps{display:flex;gap:3px;margin-top:6px}
+.laps i{width:9px;height:9px;border-radius:2px;background:var(--line);display:block}
+.laps i.p{background:var(--pool)}
+.laps i.a{background:var(--bad);opacity:.7}
+.lane-end{text-align:left;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.lvl{font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;color:#fff;background:var(--lv,var(--lv-1));white-space:nowrap}
+.lv-5-text{color:var(--tile)}
+.days{font-size:12px;font-weight:600;white-space:nowrap}
+.days.ok{color:var(--ok)}.days.warn{color:var(--warn)}.days.bad{color:var(--bad)}
+
+/* roll-call buttons */
+.roll{display:flex;gap:6px}
+.roll button{height:40px;min-width:40px;padding:0 12px;border-radius:999px;font-weight:600;font-size:13px;border:1.5px solid var(--line);color:var(--ink-2);background:var(--surface)}
+.roll .yes{border-color:var(--ok);color:var(--ok)}
+.roll .no{border-color:var(--bad);color:var(--bad)}
+.roll .done{background:var(--ok);border-color:var(--ok);color:#fff}
+.roll .done.absent{background:var(--bad);border-color:var(--bad)}
+.roll .undo{border:none;color:var(--ink-3);font-weight:500;padding:0 6px;min-width:auto}
+
+/* ── Toolbar / filters ────────────────────────────────── */
+.search{position:relative;margin-bottom:10px}
+.search input{
+  width:100%;height:48px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);
+  padding:0 46px 0 16px;font-size:15px;
+}
+.search svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink-3);pointer-events:none}
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters select{
+  flex:0 0 auto;height:38px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);
+  padding:0 14px 0 30px;font-size:13px;font-weight:500;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238AA0AC' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position:12px 50%;background-size:11px 7px;background-repeat:no-repeat;
+}
+.filters select.set{border-color:var(--pool);color:var(--pool);font-weight:600}
+.count-line{font-size:12.5px;color:var(--ink-2);margin:0 4px 8px;display:flex;justify-content:space-between}
+.count-line button{color:var(--pool);font-weight:600;font-size:12.5px}
+
+.empty{padding:36px 20px;text-align:center;color:var(--ink-2)}
+.empty svg{width:56px;height:56px;color:var(--ink-3);margin-bottom:8px}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+
+/* ── Coaches ──────────────────────────────────────────── */
+.coach{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:12px}
+.coach-top{display:flex;gap:12px;align-items:center}
+.whistle{width:46px;height:46px;border-radius:14px;background:var(--pool-wash);color:var(--pool);display:grid;place-items:center;font-weight:800;font-size:15px;flex-shrink:0}
+.coach-name{font-weight:700;font-size:16px}
+.coach-sub{font-size:12.5px;color:var(--ink-2)}
+.coach-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:var(--surface-2);border-radius:var(--r-md);padding:8px 10px}
+.stat b{display:block;font-size:19px;font-weight:700;line-height:1.2}
+.stat span{font-size:11.5px;color:var(--ink-2)}
+.mix{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--line)}
+.mix i{display:block;height:100%}
+.coach-actions{display:flex;gap:8px;margin-top:12px}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{text-decoration:none;height:44px;padding:0 18px;border-radius:999px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn svg{width:17px;height:17px}
+.btn-primary{background:var(--pool);color:#fff}
+:root[data-theme="dark"] .btn-primary{color:#04141C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn-primary{color:#04141C}}
+.btn-soft{background:var(--pool-wash);color:var(--pool)}
+.btn-ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line)}
+.btn-danger{background:var(--bad-wash);color:var(--bad)}
+.btn-block{width:100%}
+.btn:disabled{opacity:.5}
+
+/* ── Reports ──────────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px}
+.kpi b{display:block;font-size:28px;font-weight:800;line-height:1.1}
+.kpi span{font-size:12.5px;color:var(--ink-2)}
+.kpi.wide{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:14px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.card h3 small{display:block;font-weight:400;color:var(--ink-2);font-size:12px;margin-top:2px}
+.bar{display:grid;grid-template-columns:minmax(80px,34%) 1fr 32px;gap:10px;align-items:center;margin-bottom:9px;font-size:13px}
+.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;background:var(--pool)}
+.bar-n{text-align:left;font-weight:600}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--line)}
+.row:first-of-type{border-top:none}
+.row-main{flex:1;min-width:0}
+.row-main b{display:block;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-main span{font-size:12px;color:var(--ink-2)}
+.wa{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--ok-wash);color:var(--ok);flex-shrink:0}
+.wa svg{width:18px;height:18px}
+.issue{padding:10px 12px;border-radius:var(--r-md);background:var(--warn-wash);margin-bottom:8px;font-size:13px}
+.issue b{color:var(--warn)}
+.issue button{color:var(--pool);font-weight:600;text-decoration:underline;font-size:13px}
+
+/* ── Bottom tabs + FAB ────────────────────────────────── */
+.tabs{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  display:flex;justify-content:center;
+  background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.tabs-in{display:flex;width:100%;max-width:640px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;font-size:11.5px;font-weight:500;color:var(--ink-3);position:relative}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--pool);font-weight:700}
+.tab.on::before{content:"";position:absolute;top:-1px;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--pool)}
+.fab{
+  position:fixed;z-index:21;
+  bottom:calc(74px + env(safe-area-inset-bottom,0px));
+  left:max(16px,calc(50% - 304px));
+  height:54px;padding:0 20px 0 18px;border-radius:999px;background:var(--rope-yellow);color:#1B2A3A;
+  font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:8px;
+  box-shadow:0 6px 18px rgba(7,79,104,.28);
+}
+.fab svg{width:20px;height:20px}
+.fab.hide{display:none}
+
+/* ── Sheet ────────────────────────────────────────────── */
+.scrim{position:fixed;inset:0;background:rgba(3,20,28,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:640px;margin:0 auto;
+  background:var(--surface);border-radius:22px 22px 0 0;max-height:92%;overflow-y:auto;
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);
+  padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+}
+.sheet.on{transform:none}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+.grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 6px}
+.sheet-head{padding:6px 18px 14px;display:flex;gap:14px;align-items:flex-start}
+.sheet-head h2{font-size:20px;font-weight:800;line-height:1.25}
+.sheet-body{padding:0 18px}
+.close{margin-inline-start:auto;width:36px;height:36px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex-shrink:0}
+.close svg{width:18px;height:18px}
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.act{text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:var(--r-md);background:var(--surface-2);font-size:12px;font-weight:600;color:var(--ink-2)}
+.act svg{width:20px;height:20px;color:var(--pool)}
+.act.off{opacity:.4;pointer-events:none}
+.sec-title{font-size:13px;font-weight:700;color:var(--ink-2);margin:18px 0 8px}
+
+/* level ladder: 5 lanes, current one lit */
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ladder button{padding:8px 2px;border-radius:var(--r-sm);font-size:12px;font-weight:600;background:var(--surface-2);color:var(--ink-3);border-bottom:3px solid var(--lv)}
+.ladder button.on{background:var(--lv);color:#fff}
+.ladder button.on.dark{color:var(--tile)}
+
+.session-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.session-grid button{aspect-ratio:1;border-radius:var(--r-sm);font-size:12px;font-weight:700}
+.session-grid .p{background:var(--ok-wash);color:var(--ok)}
+.session-grid .a{background:var(--bad-wash);color:var(--bad)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink-2);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:4px;vertical-align:-1px}
+
+.facts{border-radius:var(--r-md);background:var(--surface-2);padding:4px 12px}
+.fact{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:13.5px}
+.fact + .fact{border-top:1px dashed var(--line)}
+.fact span{color:var(--ink-2);flex-shrink:0}
+.fact b{font-weight:600;text-align:left;white-space:pre-wrap;word-break:break-word}
+
+/* ── Forms ────────────────────────────────────────────── */
+.form-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:14px}
+.form-card h3{font-size:14px;font-weight:700;color:var(--pool);margin-bottom:12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:5px}
+.field label em{color:var(--bad);font-style:normal}
+.field input,.field select,.field textarea{
+  width:100%;height:46px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--surface-2);padding:0 12px;font-size:15px;
+}
+.field textarea{height:auto;min-height:84px;padding:10px 12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pool);outline:none;background:var(--surface)}
+.field .bad-input{border-color:var(--bad)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.daypick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.daypick button{height:34px;padding:0 12px;border-radius:999px;border:1.5px solid var(--line);font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.daypick button.on{background:var(--pool);border-color:var(--pool);color:#fff}
+.hint{font-size:12px;color:var(--ink-3);margin-top:4px}
+.form-actions{display:flex;gap:10px;margin-top:6px}
+.form-actions .btn-primary{flex:1}
+
+/* ── Toast ────────────────────────────────────────────── */
+.toast{
+  position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 76px);z-index:60;
+  transform:translate(-50%,-12px);opacity:0;transition:all .25s;pointer-events:none;
+  background:var(--ink);color:var(--tile);padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:600;max-width:90%;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--bad);color:#fff}
 </style>
 </head>
 <body>
-<div class="loading-bar" id="loading-bar"><div class="loading-bar-fill" id="loading-fill"></div></div>
 <div class="app">
-<div class="topbar">
-  <div>
-    <div class="topbar-title"><span>🏊</span> Will Be Team</div>
-    <div class="topbar-sub">نظام متابعة السباحين</div>
-  </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-    <div class="topbar-count" id="total-count">0 سباح</div>
-    <div class="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">متزامن</span></div>
-  </div>
-</div>
-
-<nav class="bottom-nav">
-  <div class="nav-item active" id="nav-list" onclick="switchTab('list')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span>السباحون</span>
-  </div>
-  <div class="nav-item" id="nav-add" onclick="switchTab('add')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-    <span>إضافة</span>
-  </div>
-  <div class="nav-item" id="nav-coaches" onclick="switchTab('coaches')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="11" x2="12" y2="15"/><line x1="10" y1="13" x2="14" y2="13"/></svg>
-    <span>المدربون</span>
-  </div>
-  <div class="nav-item" id="nav-report" onclick="switchTab('report')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span>التقارير</span>
-  </div>
-</nav>
-
-<div class="content">
-
-<div class="panel active" id="panel-list">
-  <div class="stats-grid" id="stats-grid"></div>
-  <button class="btn-primary" onclick="switchTab('add')" style="margin-bottom:14px">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-    إضافة سباح جديد
-  </button>
-  <div class="search-wrap">
-    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="search-input" placeholder="بحث باسم السباح..." oninput="renderList()">
-  </div>
-  <div class="filter-row">
-    <select id="filter-level" onchange="renderList()">
-      <option value="">كل المستويات</option>
-      <option>مبتدئ</option><option>متوسط</option><option>متقدم</option><option>محترف</option><option>نخبة</option>
-    </select>
-    <select id="filter-coach" onchange="renderList()"><option value="">كل المدربين</option></select>
-  </div>
-  <div id="swimmers-list"></div>
-</div>
-
-<div class="panel" id="panel-add">
-  <div id="form-mode-title" style="font-size:16px;font-weight:700;margin-bottom:14px">إضافة سباح جديد</div>
-  <div class="form-section">
-    <div class="form-section-title">البيانات الشخصية</div>
-    <div class="form-group"><label>الاسم الكامل <span class="required">*</span></label><input id="f-name" type="text"></div>
-    <div class="form-row">
-      <div class="form-group"><label>تاريخ الميلاد <span class="required">*</span></label><input id="f-dob" type="date"></div>
-      <div class="form-group"><label>المستوى</label>
-        <select id="f-level"><option>مبتدئ</option><option>متوسط</option><option>متقدم</option><option>محترف</option><option>نخبة</option></select>
+  <header class="deck">
+    <div class="deck-row">
+      <div class="brand">
+        <div class="brand-name">Will Be Team</div>
+        <div class="brand-sub">أكاديمية السباحة · متابعة السباحين</div>
       </div>
+      <div class="sync" id="sync" aria-live="polite"><i></i><span id="sync-label">متصل</span></div>
+      <button class="icon-btn" id="theme-btn" aria-label="تبديل المظهر" onclick="toggleTheme()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
     </div>
-    <div class="form-group"><label>اسم ولي الأمر</label><input id="f-parent" type="text"></div>
-    <div class="form-group"><label>رقم التليفون</label><input id="f-phone" type="tel"></div>
-  </div>
-  <div class="form-section">
-    <div class="form-section-title">بيانات التدريب</div>
-    <div class="form-group"><label>المدرب</label><select id="f-coach"><option value="">-- اختر مدرب --</option></select></div>
-    <div class="form-row">
-      <div class="form-group"><label>تاريخ الاشتراك <span class="required">*</span></label><input id="f-start" type="date"></div>
-      <div class="form-group"><label>المدة</label>
-        <select id="f-duration"><option value="1">شهر</option><option value="3">3 شهور</option><option value="6">6 شهور</option><option value="12">سنة</option></select>
+    <div class="progress" id="progress"></div>
+    <div class="rope" aria-hidden="true"></div>
+  </header>
+
+  <main class="scroll" id="scroll">
+    <!-- TODAY -->
+    <section class="view on" id="view-today" aria-label="حصة اليوم">
+      <div class="today">
+        <div class="clock" id="clock"></div>
+        <div>
+          <div class="today-day" id="today-day"></div>
+          <div class="today-date num" id="today-date"></div>
+          <div class="today-facts" id="today-facts"></div>
+        </div>
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>الرسوم (جنيه)</label><input id="f-fee" type="number"></div>
-      <div class="form-group"><label>الفرع</label><input id="f-branch" type="text"></div>
-    </div>
-    <div class="form-group"><label>مواعيد التدريب</label><input id="f-schedule" type="text"></div>
-    <div class="form-group"><label>ملاحظات</label><textarea id="f-notes"></textarea></div>
-  </div>
-  <button class="btn-primary" onclick="saveSwimmer()">💾 حفظ السباح</button>
-  <button class="btn-secondary" onclick="cancelForm()">إلغاء</button>
-</div>
+      <div class="h2">كشف حضور اليوم</div>
+      <div id="today-list"></div>
+      <div class="h2" style="margin-top:20px">تسجيل سباح خارج جدول اليوم</div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+        <input id="extra-q" type="search" placeholder="اكتب اسم السباح" oninput="renderExtra()" aria-label="بحث عن سباح لإضافته لحصة اليوم">
+      </div>
+      <div id="extra-list"></div>
+    </section>
 
-<div class="panel" id="panel-coaches">
-  <button class="btn-primary" onclick="openCoachModal()" style="margin-bottom:14px">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-    إضافة مدرب جديد
+    <!-- SWIMMERS -->
+    <section class="view" id="view-swimmers" aria-label="السباحون">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+        <input id="q" type="search" placeholder="ابحث بالاسم أو ولي الأمر أو التليفون" oninput="renderSwimmers()" aria-label="بحث">
+      </div>
+      <div class="filters">
+        <select id="f-status" onchange="renderSwimmers()" aria-label="حالة الاشتراك">
+          <option value="">كل الاشتراكات</option><option value="active">فعال</option><option value="soon">ينتهي خلال 7 أيام</option><option value="expired">منتهي</option>
+        </select>
+        <select id="f-level" onchange="renderSwimmers()" aria-label="المستوى"></select>
+        <select id="f-coach" onchange="renderSwimmers()" aria-label="المدرب"></select>
+        <select id="f-branch" onchange="renderSwimmers()" aria-label="الفرع"></select>
+        <select id="f-sort" onchange="renderSwimmers()" aria-label="الترتيب">
+          <option value="name">ترتيب: الاسم</option><option value="expiry">ترتيب: أقرب انتهاء</option><option value="att">ترتيب: الأقل حضورًا</option><option value="new">ترتيب: الأحدث</option>
+        </select>
+      </div>
+      <div class="count-line"><span id="count-line"></span><button id="clear-filters" onclick="clearFilters()" hidden>مسح الفلاتر</button></div>
+      <div id="swimmer-list"></div>
+    </section>
+
+    <!-- COACHES -->
+    <section class="view" id="view-coaches" aria-label="المدربون">
+      <div id="coach-list"></div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="view" id="view-reports" aria-label="التقارير">
+      <div id="report"></div>
+    </section>
+
+    <!-- FORM -->
+    <section class="view" id="view-form" aria-label="بيانات السباح">
+      <div class="h2" id="form-title">سباح جديد</div>
+      <div class="form-card">
+        <h3>بيانات السباح</h3>
+        <div class="field"><label for="s-name">الاسم الكامل <em>*</em></label><input id="s-name" autocomplete="off"></div>
+        <div class="two">
+          <div class="field"><label for="s-dob">تاريخ الميلاد <em>*</em></label><input id="s-dob" type="date"></div>
+          <div class="field"><label for="s-level">المستوى</label><select id="s-level"></select></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="s-parent">ولي الأمر</label><input id="s-parent"></div>
+          <div class="field"><label for="s-phone">التليفون</label><input id="s-phone" type="tel" inputmode="tel" dir="ltr" style="text-align:right"></div>
+        </div>
+      </div>
+      <div class="form-card">
+        <h3>التدريب والاشتراك</h3>
+        <div class="two">
+          <div class="field"><label for="s-coach">المدرب</label><select id="s-coach"></select></div>
+          <div class="field"><label for="s-branch">الفرع</label><input id="s-branch" list="branch-options"><datalist id="branch-options"></datalist></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="s-start">بداية الاشتراك <em>*</em></label><input id="s-start" type="date"></div>
+          <div class="field"><label for="s-duration">المدة</label>
+            <select id="s-duration"><option value="1">شهر</option><option value="2">شهران</option><option value="3">3 شهور</option><option value="6">6 شهور</option><option value="12">سنة</option></select>
+          </div>
+        </div>
+        <div class="field"><label for="s-fee">الرسوم (جنيه)</label><input id="s-fee" type="number" inputmode="numeric" min="0"></div>
+        <div class="field">
+          <label for="s-schedule">مواعيد التدريب</label>
+          <input id="s-schedule" placeholder="مثال: السبت والثلاثاء 5م" oninput="syncDayChips()">
+          <div class="daypick" id="daypick"></div>
+          <div class="hint">اختيار الأيام يضيف السباح تلقائيًا لكشف حضور تلك الأيام.</div>
+        </div>
+        <div class="field"><label for="s-notes">ملاحظات المدرب</label><textarea id="s-notes"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="save-btn" onclick="saveSwimmer()">حفظ السباح</button>
+        <button class="btn btn-ghost" onclick="cancelForm()">إلغاء</button>
+      </div>
+    </section>
+  </main>
+
+  <button class="fab" id="fab" onclick="openForm()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    <span id="fab-label">سباح جديد</span>
   </button>
-  <div id="coaches-list"></div>
+
+  <nav class="tabs" aria-label="التنقل">
+    <div class="tabs-in">
+      <button class="tab on" id="tab-today" onclick="go('today')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M10 2h4M12 2v3"/></svg>
+        اليوم
+      </button>
+      <button class="tab" id="tab-swimmers" onclick="go('swimmers')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16.5" cy="6" r="2"/><path d="M4 12l5-3 3 2.5 3.5-2"/><path d="M2 17c1.5 1.2 3 1.2 4.5 0s3-1.2 4.5 0 3 1.2 4.5 0 3-1.2 4.5 0 1.5.8 2 .6"/></svg>
+        السباحون
+      </button>
+      <button class="tab" id="tab-coaches" onclick="go('coaches')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="14" r="5"/><path d="M13 11l8-5v4l-6 3"/><path d="M9 14h.01"/></svg>
+        المدربون
+      </button>
+      <button class="tab" id="tab-reports" onclick="go('reports')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        التقارير
+      </button>
+    </div>
+  </nav>
 </div>
 
-<div class="panel" id="panel-report">
-  <div class="report-card"><div class="report-card-title">توزيع المستويات</div><div id="level-dist"></div></div>
-  <div class="report-card"><div class="report-card-title">السباحون لكل مدرب</div><div id="coach-dist"></div></div>
-  <div class="report-card"><div class="report-card-title" style="color:var(--warning)">⚠️ اشتراكات تنتهي خلال 30 يوم</div><div id="expiry-list"></div></div>
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="grab"></div>
+  <div id="sheet-content"></div>
 </div>
-
-</div>
-
-</div>
-</div>
-
-<div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-header" id="sheet-header"></div>
-  <div class="sheet-body" id="sheet-body"></div>
-</div>
-
-<div class="modal-ov" id="coach-modal" onclick="closeCoachModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="coach-modal-title">إضافة مدرب جديد</div>
-    <div class="form-group"><label>اسم المدرب <span class="required">*</span></label><input id="cm-name" type="text"></div>
-    <div class="form-group"><label>التخصص</label><input id="cm-spec" type="text"></div>
-    <div class="form-group"><label>رقم التليفون</label><input id="cm-phone" type="tel"></div>
-    <div class="form-group"><label>الفرع</label><input id="cm-branch" type="text"></div>
-    <button class="btn-primary" onclick="saveCoach()">💾 حفظ المدرب</button>
-    <button class="btn-secondary" onclick="document.getElementById('coach-modal').classList.remove('open')">إلغاء</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
-// ─── SUPABASE CONFIG ─────────────────────────────────────
-const SB_URL = 'https://wcocfpdckaaidmxglwsk.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indjb2NmcGRja2FhaWRteGdsd3NrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzMDQsImV4cCI6MjA5MTkxOTMwNH0.Fs05HHSFw2J9jyIvDr-2eLF5a02_V0GE8REQXmYDa_M';
+// ─── SUPABASE (hosted in mobica-delivery-tracker, tables wbt_*) ───
+const SB_URL = 'https://ojsmjqwjsdornetdqiyu.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qc21qcXdqc2Rvcm5ldGRxaXl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTM1NTgsImV4cCI6MjA5MTA4OTU1OH0.ThQBFXNp1wC-7bteu95Fuiertz1t69TbyLqpna_rjVQ';
+const TBL_PREFIX = 'wbt_';
 const HEADERS = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 
-async function sbGet(table, query=''){
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${query}&order=created_at.asc`,{headers:HEADERS});
-  if(!r.ok) throw new Error(await r.text());
-  return r.json();
+async function sbGet(table){
+  const r = await fetch(`${SB_URL}/rest/v1/${TBL_PREFIX}${table}?select=*&order=created_at.asc`,{headers:HEADERS});
+  if(!r.ok) throw new Error(await r.text()); return r.json();
 }
-async function sbInsert(table, data){
-  const r = await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:HEADERS,body:JSON.stringify(data)});
-  if(!r.ok) throw new Error(await r.text());
-  return r.json();
+async function sbInsert(table,data){
+  const r = await fetch(`${SB_URL}/rest/v1/${TBL_PREFIX}${table}`,{method:'POST',headers:HEADERS,body:JSON.stringify(data)});
+  if(!r.ok) throw new Error(await r.text()); return r.json();
 }
-async function sbUpdate(table, id, data){
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{method:'PATCH',headers:HEADERS,body:JSON.stringify(data)});
-  if(!r.ok) throw new Error(await r.text());
-  return r.json();
+async function sbUpdate(table,id,data){
+  const r = await fetch(`${SB_URL}/rest/v1/${TBL_PREFIX}${table}?id=eq.${encodeURIComponent(id)}`,{method:'PATCH',headers:HEADERS,body:JSON.stringify(data)});
+  if(!r.ok) throw new Error(await r.text()); return r.json();
 }
-async function sbDelete(table, id){
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:HEADERS});
+async function sbDelete(table,id){
+  const r = await fetch(`${SB_URL}/rest/v1/${TBL_PREFIX}${table}?id=eq.${encodeURIComponent(id)}`,{method:'DELETE',headers:HEADERS});
   if(!r.ok) throw new Error(await r.text());
 }
 
 // ─── STATE ───────────────────────────────────────────────
-let swimmers = [], coaches = [], editId = null, editCoachId = null;
+let swimmers=[], coaches=[], editId=null, currentView='today';
+const LEVELS=['مبتدئ','متوسط','متقدم','محترف','نخبة'];
+const LV_VAR={'مبتدئ':'var(--lv-1)','متوسط':'var(--lv-2)','متقدم':'var(--lv-3)','محترف':'var(--lv-4)','نخبة':'var(--lv-5)'};
+// JS getDay(): 0=Sun … 6=Sat. Stems are matched on normalised text.
+const DAYS=[
+  {name:'الأحد',   stems:['الاحد']},
+  {name:'الاثنين', stems:['اثنين','اتنين']},
+  {name:'الثلاثاء',stems:['ثلاثاء','ثلاث']},
+  {name:'الأربعاء',stems:['اربعاء','اربع']},
+  {name:'الخميس',  stems:['خميس']},
+  {name:'الجمعة',  stems:['جمعه']},
+  {name:'السبت',   stems:['سبت']},
+];
+const WEEK_ORDER=[6,0,1,2,3,4,5]; // Saturday first, as in Egypt
 
 // ─── HELPERS ─────────────────────────────────────────────
-function calcAge(d){const b=new Date(d),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a;}
-function calcExpiry(s,d){const dt=new Date(s);dt.setMonth(dt.getMonth()+parseInt(d));return dt.toISOString().split('T')[0];}
-function daysLeft(e){return Math.ceil((new Date(e)-new Date())/86400000);}
-function attRate(a){return a&&a.length?Math.round(a.filter(x=>x).length/a.length*100):0;}
-function fmtDate(d){if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`;}
-function initials(n){const p=n.trim().split(' ');return p.length>=2?p[0][0]+p[1][0]:n.slice(0,2);}
-const LB={مبتدئ:'badge-blue',متوسط:'badge-green',متقدم:'badge-amber',محترف:'badge-red',نخبة:'badge-purple'};
-const AB={مبتدئ:'#dbeafe',متوسط:'#dcfce7',متقدم:'#fef3c7',محترف:'#fee2e2',نخبة:'#ede9fe'};
-const AC={مبتدئ:'#1e40af',متوسط:'#14532d',متقدم:'#78350f',محترف:'#7f1d1d',نخبة:'#4c1d95'};
+const $=id=>document.getElementById(id);
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function norm(t){return String(t||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\u064B-\u0652]/g,'').replace(/\s+/g,' ').trim().toLowerCase();}
+function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function addMonths(iso,m){const [y,mo,d]=iso.split('-').map(Number);const dt=new Date(Date.UTC(y,mo-1+Number(m||1),d));return dt.toISOString().slice(0,10);}
+function expiryOf(s){return addMonths(s.start_date,s.duration||1);}
+function daysLeft(iso){const a=new Date(iso+'T00:00:00'),b=new Date(todayISO()+'T00:00:00');return Math.round((a-b)/86400000);}
+function ageOf(dob){if(!dob)return null;const b=new Date(dob),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a;}
+function attOf(s){const a=s.attendance||[];return{n:a.length,p:a.filter(Boolean).length,pct:a.length?Math.round(a.filter(Boolean).length/a.length*100):null};}
+function fmtDate(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function initials(n){const p=String(n||'').replace(/^(كابتن|ك\/|ك)\s+/,'').replace(/^ك\//,'').trim();return(p[0]||'؟');}
+function branchKey(b){return norm(b).replace(/^gps\.?\s*/,'')||'';}
+function branchLabel(b){return String(b||'').replace(/\s+/g,' ').trim();}
+function waNumber(p){let d=String(p||'').replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===11&&d.startsWith('01'))d='2'+d;return d.length>=11?d:null;}
+function telNumber(p){const d=String(p||'').replace(/[^\d+]/g,'');return d.replace(/^\+?/,'').length>=8?d:null;}
+function status(s){const dl=daysLeft(expiryOf(s));return dl<0?{k:'expired',cls:'bad',txt:`منتهي منذ ${-dl} يوم`,dl}:dl<=7?{k:'soon',cls:'warn',txt:dl===0?'ينتهي اليوم':`باقي ${dl} يوم`,dl}:{k:'active',cls:'ok',txt:`باقي ${dl} يوم`,dl};}
+function scheduledOn(s,dayIdx){const t=norm(s.schedule);return DAYS[dayIdx].stems.some(st=>t.includes(st));}
+function lvStyle(l){return`--lv:${LV_VAR[l]||'var(--lv-1)'}`;}
+function lvPill(l){return`<span class="lvl${l==='نخبة'?' lv-5-text':''}" style="${lvStyle(l)}">${esc(l||'—')}</span>`;}
+function lapsHTML(a,max=12){const arr=(a||[]).slice(-max);if(!arr.length)return'';return`<div class="laps" aria-label="آخر ${arr.length} جلسة">${arr.map(v=>`<i class="${v?'p':'a'}"></i>`).join('')}</div>`;}
 
-function setSyncing(on){
-  document.getElementById('sync-dot').className='sync-dot'+(on?' syncing':'');
-  document.getElementById('sync-label').textContent=on?'جارٍ الحفظ...':'متزامن';
+let toastT;
+function toast(msg,err){const t=$('toast');t.textContent=msg;t.className='toast on'+(err?' err':'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='toast'+(err?' err':''),2600);}
+let busyN=0;
+function busy(on){busyN+=on?1:-1;if(busyN<0)busyN=0;const b=busyN>0;$('sync').classList.toggle('busy',b);$('sync-label').textContent=b?'جارٍ الحفظ':'متصل';$('progress').classList.toggle('on',b);}
+
+// ─── ROLL-CALL MEMORY (per device, per day) ──────────────
+function rollKey(){return'wbt-roll-'+todayISO();}
+function getRoll(){try{return JSON.parse(localStorage.getItem(rollKey())||'{}');}catch(e){return{};}}
+function setRoll(o){try{localStorage.setItem(rollKey(),JSON.stringify(o));}catch(e){}}
+
+// ─── THEME ───────────────────────────────────────────────
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme');}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  const next=cur==='dark'?'light':'dark';applyTheme(next);try{localStorage.setItem('wbt-theme',next);}catch(e){}
+  if(currentView==='today')renderToday();
 }
-function showLoading(){const b=document.getElementById('loading-bar'),f=document.getElementById('loading-fill');b.style.display='block';f.style.width='70%';}
-function hideLoading(){const f=document.getElementById('loading-fill');f.style.width='100%';setTimeout(()=>{document.getElementById('loading-bar').style.display='none';f.style.width='0';},300);}
+try{applyTheme(localStorage.getItem('wbt-theme'));}catch(e){}
 
-// ─── LOAD DATA ───────────────────────────────────────────
+// ─── LOAD ────────────────────────────────────────────────
 async function loadAll(){
-  showLoading();
-  try {
-    [swimmers, coaches] = await Promise.all([sbGet('swimmers'), sbGet('coaches')]);
-    // parse attendance JSON
-    swimmers.forEach(s=>{if(typeof s.attendance==='string')s.attendance=JSON.parse(s.attendance||'[]');s.attendance=s.attendance||[];});
-    updateStats(); updateCoachSelects(); renderList();
-  } catch(e){ showToast('خطأ في تحميل البيانات ⚠️'); console.error(e); }
-  hideLoading();
-}
-
-// ─── STATS ───────────────────────────────────────────────
-function updateStats(){
-  const t=swimmers.length,act=swimmers.filter(s=>daysLeft(calcExpiry(s.start_date,s.duration))>0).length;
-  const exp=swimmers.filter(s=>{const d=daysLeft(calcExpiry(s.start_date,s.duration));return d>=0&&d<=30;}).length;
-  const avg=t?Math.round(swimmers.reduce((a,s)=>a+attRate(s.attendance),0)/t):0;
-  document.getElementById('total-count').textContent=t+' سباح';
-  document.getElementById('stats-grid').innerHTML=
-    `<div class="stat-card blue"><div class="stat-num">${t}</div><div class="stat-lbl">إجمالي السباحين</div></div>`+
-    `<div class="stat-card green"><div class="stat-num">${act}</div><div class="stat-lbl">اشتراك فعال</div></div>`+
-    `<div class="stat-card amber"><div class="stat-num">${exp}</div><div class="stat-lbl">تجديد قريب</div></div>`+
-    `<div class="stat-card red"><div class="stat-num">${avg}%</div><div class="stat-lbl">متوسط الحضور</div></div>`;
-}
-
-// ─── COACH SELECTS ────────────────────────────────────────
-function updateCoachSelects(){
-  const fc=document.getElementById('filter-coach'),fcv=fc.value;
-  fc.innerHTML='<option value="">كل المدربين</option>'+coaches.map(c=>`<option${c.name===fcv?' selected':''}>${c.name}</option>`).join('');
-  const sc=document.getElementById('f-coach'),scv=sc.value;
-  sc.innerHTML='<option value="">-- اختر مدرب --</option>'+coaches.map(c=>`<option${c.name===scv?' selected':''}>${c.name}</option>`).join('');
-}
-
-// ─── LIST ────────────────────────────────────────────────
-function renderList(){
-  const q=document.getElementById('search-input').value.trim().toLowerCase();
-  const lv=document.getElementById('filter-level').value;
-  const co=document.getElementById('filter-coach').value;
-  const data=swimmers.filter(s=>(!q||s.name.toLowerCase().includes(q))&&(!lv||s.level===lv)&&(!co||s.coach===co));
-  const el=document.getElementById('swimmers-list');
-  if(!data.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🏊</div><div class="empty-text">${swimmers.length?'لا توجد نتائج':'لا يوجد سباحون بعد\nاضغط إضافة لتسجيل أول سباح'}</div></div>`;return;}
-  el.innerHTML=data.map(s=>{
-    const ex=calcExpiry(s.start_date,s.duration),dl=daysLeft(ex),att=attRate(s.attendance);
-    const ec=dl<0?'expiry-exp':dl<=30?'expiry-warn':'expiry-ok',et=dl<0?'منتهي':dl===0?'اليوم':dl+' يوم';
-    return`<div class="swimmer-card" onclick="viewSwimmer('${s.id}')">
-      <div class="swimmer-card-top">
-        <div class="avatar" style="background:${AB[s.level]||'#f1f5f9'};color:${AC[s.level]||'#475569'}">${initials(s.name)}</div>
-        <div style="flex:1;min-width:0"><div class="swimmer-name">${s.name}</div><div class="swimmer-meta">${calcAge(s.dob)} سنة · ${s.coach||'بدون مدرب'}</div></div>
-        <span class="badge ${LB[s.level]||'badge-blue'}">${s.level}</span>
-      </div>
-      <div class="swimmer-card-bottom">
-        <div class="att-bar-wrap"><div class="att-bar"><div class="att-fill" style="width:${att}%"></div></div><span class="att-pct">${att}%</span></div>
-        <span class="expiry-tag ${ec}">📅 ${et}</span>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ─── VIEW SWIMMER ─────────────────────────────────────────
-function viewSwimmer(id){
-  const s=swimmers.find(x=>x.id===id);if(!s)return;
-  const ex=calcExpiry(s.start_date,s.duration),dl=daysLeft(ex),att=attRate(s.attendance);
-  document.getElementById('sheet-header').innerHTML=`
-    <div class="sheet-avatar" style="background:${AB[s.level]||'#f1f5f9'};color:${AC[s.level]||'#475569'}">${initials(s.name)}</div>
-    <div><div class="sheet-name">${s.name}</div><div class="sheet-sub">${s.level} · ${s.coach||'بدون مدرب'}${s.branch?' · '+s.branch:''}</div></div>`;
-  const sess=(s.attendance||[]).map((v,i)=>`<div class="att-cell ${v?'present':'absent'}" onclick="toggleAtt('${id}',${i})">${i+1}</div>`).join('');
-  document.getElementById('sheet-body').innerHTML=`
-    <div class="sheet-actions">
-      <button class="btn-edit" onclick="editSwimmer('${id}')">✏️ تعديل</button>
-      <button class="btn-delete" onclick="deleteSwimmer('${id}')">🗑️</button>
-    </div>
-    <button class="btn-attend" onclick="addAttendance('${id}')">✅ تسجيل حضور جلسة جديدة</button>
-    <div style="padding:0 16px">
-      <div class="detail-group" style="margin-top:16px">
-        <div class="detail-group-title">البيانات</div>
-        <div class="detail-row"><span class="detail-lbl">العمر</span><span class="detail-val">${calcAge(s.dob)} سنة (${fmtDate(s.dob)})</span></div>
-        <div class="detail-row"><span class="detail-lbl">المدرب</span><span class="detail-val">${s.coach||'—'}</span></div>
-        <div class="detail-row"><span class="detail-lbl">ولي الأمر</span><span class="detail-val">${s.parent||'—'}</span></div>
-        <div class="detail-row"><span class="detail-lbl">التليفون</span><span class="detail-val">${s.phone||'—'}</span></div>
-        <div class="detail-row"><span class="detail-lbl">بداية الاشتراك</span><span class="detail-val">${fmtDate(s.start_date)}</span></div>
-        <div class="detail-row"><span class="detail-lbl">نهاية الاشتراك</span><span class="detail-val" style="color:${dl<0?'#dc2626':dl<=30?'#d97706':'#16a34a'}">${fmtDate(ex)} (${dl<0?'منتهي':dl+' يوم'})</span></div>
-        <div class="detail-row"><span class="detail-lbl">الرسوم</span><span class="detail-val">${s.fee||0} جنيه</span></div>
-        <div class="detail-row"><span class="detail-lbl">المواعيد</span><span class="detail-val">${s.schedule||'—'}</span></div>
-        <div class="detail-row"><span class="detail-lbl">الحضور</span><span class="detail-val">${att}% (${(s.attendance||[]).filter(x=>x).length}/${(s.attendance||[]).length} جلسة)</span></div>
-        ${s.notes?`<div class="detail-row"><span class="detail-lbl">ملاحظات</span><span class="detail-val">${s.notes}</span></div>`:''}
-      </div>
-      <div class="att-grid-title">سجل الحضور (اضغط لتعديل)</div>
-      <div class="att-grid">${sess||'<div style="color:var(--text3);font-size:13px">لا توجد جلسات بعد</div>'}</div>
-      <div class="att-legend">
-        <span><div class="att-dot" style="background:#dcfce7;border:1px solid #86efac"></div> حضر</span>
-        <span><div class="att-dot" style="background:#fee2e2;border:1px solid #fca5a5"></div> غاب</span>
-      </div>
-    </div>`;
-  document.getElementById('sheet-overlay').style.display='block';
-  document.getElementById('sheet').style.display='block';
-}
-
-function closeSheet(){document.getElementById('sheet-overlay').style.display='none';document.getElementById('sheet').style.display='none';}
-
-async function toggleAtt(id,idx){
-  const s=swimmers.find(x=>x.id===id);if(!s)return;
-  s.attendance[idx]=s.attendance[idx]?0:1;
-  setSyncing(true);
-  try{ await sbUpdate('swimmers',id,{attendance:s.attendance}); }catch(e){showToast('خطأ في الحفظ ⚠️');}
-  setSyncing(false); updateStats(); viewSwimmer(id);
-}
-
-async function addAttendance(id){
-  const s=swimmers.find(x=>x.id===id);if(!s)return;
-  s.attendance.push(1);
-  setSyncing(true);
-  try{ await sbUpdate('swimmers',id,{attendance:s.attendance}); showToast('تم تسجيل الحضور ✓'); }catch(e){showToast('خطأ في الحفظ ⚠️');s.attendance.pop();}
-  setSyncing(false); updateStats(); viewSwimmer(id);
-}
-
-// ─── SWIMMER FORM ─────────────────────────────────────────
-function switchTab(tab){
-  ['list','add','coaches','report'].forEach(t=>{
-    document.getElementById('panel-'+t).classList.toggle('active',t===tab);
-    document.getElementById('nav-'+t).classList.toggle('active',t===tab);
-  });
-  if(tab==='list'){renderList();updateCoachSelects();}
-  if(tab==='coaches')renderCoaches();
-  if(tab==='report')renderReport();
-}
-
-function cancelForm(){editId=null;clearForm();document.getElementById('form-mode-title').textContent='إضافة سباح جديد';switchTab('list');}
-
-function clearForm(){
-  ['f-name','f-parent','f-phone','f-fee','f-branch','f-schedule','f-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-dob').value='';
-  document.getElementById('f-level').value='مبتدئ';
-  document.getElementById('f-duration').value='1';
-  document.getElementById('f-coach').value='';
-  document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
-}
-
-async function saveSwimmer(){
-  const name=document.getElementById('f-name').value.trim();
-  const dob=document.getElementById('f-dob').value;
-  const start=document.getElementById('f-start').value;
-  if(!name||!dob||!start){showToast('يرجى تعبئة الحقول المطلوبة ⚠️');return;}
-  const data={name,dob,start_date:start,level:document.getElementById('f-level').value,coach:document.getElementById('f-coach').value,parent:document.getElementById('f-parent').value,phone:document.getElementById('f-phone').value,duration:parseInt(document.getElementById('f-duration').value),fee:parseInt(document.getElementById('f-fee').value)||0,branch:document.getElementById('f-branch').value,schedule:document.getElementById('f-schedule').value,notes:document.getElementById('f-notes').value};
-  setSyncing(true);
+  busy(true);
   try{
-    if(editId){
-      const existing=swimmers.find(s=>s.id===editId);
-      await sbUpdate('swimmers',editId,{...data,attendance:existing?existing.attendance:[]});
-      const idx=swimmers.findIndex(s=>s.id===editId);
-      swimmers[idx]={...swimmers[idx],...data};
-    } else {
-      data.attendance=[];
-      const res=await sbInsert('swimmers',data);
-      swimmers.push(res[0]||{...data,id:Date.now().toString()});
-    }
-    editId=null; clearForm();
-    document.getElementById('form-mode-title').textContent='إضافة سباح جديد';
-    updateStats(); updateCoachSelects();
-    showToast('تم حفظ السباح ✓');
-    switchTab('list');
-  } catch(e){showToast('خطأ في الحفظ ⚠️');console.error(e);}
-  setSyncing(false);
+    [swimmers,coaches]=await Promise.all([sbGet('swimmers'),sbGet('coaches')]);
+    swimmers.forEach(s=>{if(typeof s.attendance==='string'){try{s.attendance=JSON.parse(s.attendance);}catch(e){s.attendance=[];}}s.attendance=Array.isArray(s.attendance)?s.attendance:[];});
+  }catch(e){console.error(e);toast('تعذّر تحميل البيانات. تحقق من الاتصال ثم أعد فتح التطبيق.',true);}
+  busy(false);
+  fillSelects();render();
 }
 
-function editSwimmer(id){
+// ─── NAVIGATION ──────────────────────────────────────────
+function go(v){
+  if(v!=='form'&&currentView==='form'){editId=null;}
+  currentView=v;
+  ['today','swimmers','coaches','reports','form'].forEach(x=>{$('view-'+x).classList.toggle('on',x===v);const t=$('tab-'+x);if(t){t.classList.toggle('on',x===v);t.setAttribute('aria-current',x===v?'page':'false');}});
+  $('fab').classList.toggle('hide',v==='form'||v==='reports'||v==='today');
+  $('fab-label').textContent=v==='coaches'?'مدرب جديد':'سباح جديد';
+  $('fab').onclick=v==='coaches'?()=>openCoach():()=>openForm();
+  $('scroll').scrollTop=0;
+  render();
+}
+function render(){({today:renderToday,swimmers:renderSwimmers,coaches:renderCoaches,reports:renderReports}[currentView]||(()=>{}))();}
+
+// ─── SELECTS ─────────────────────────────────────────────
+function branches(){const m=new Map();swimmers.concat(coaches).forEach(x=>{const k=branchKey(x.branch);if(k&&!m.has(k))m.set(k,branchLabel(x.branch));});return[...m.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ar'));}
+function fillSelects(){
+  const keep=id=>$(id).value;
+  const lv=keep('f-level'),co=keep('f-coach'),br=keep('f-branch');
+  $('f-level').innerHTML='<option value="">كل المستويات</option>'+LEVELS.map(l=>`<option${l===lv?' selected':''}>${esc(l)}</option>`).join('');
+  $('f-coach').innerHTML='<option value="">كل المدربين</option><option value="__none"'+(co==='__none'?' selected':'')+'>بدون مدرب</option>'+coaches.map(c=>`<option value="${esc(c.name)}"${c.name===co?' selected':''}>${esc(c.name)}</option>`).join('');
+  $('f-branch').innerHTML='<option value="">كل الفروع</option>'+branches().map(([k,l])=>`<option value="${esc(k)}"${k===br?' selected':''}>${esc(l)}</option>`).join('');
+  $('s-level').innerHTML=LEVELS.map(l=>`<option>${esc(l)}</option>`).join('');
+  const sc=$('s-coach').value;
+  $('s-coach').innerHTML='<option value="">بدون مدرب</option>'+coaches.map(c=>`<option value="${esc(c.name)}"${c.name===sc?' selected':''}>${esc(c.name)}</option>`).join('');
+  $('branch-options').innerHTML=branches().map(([,l])=>`<option value="${esc(l)}">`).join('');
+}
+
+// ─── TODAY ───────────────────────────────────────────────
+function clockSVG(done,total){
+  const R=56,C=2*Math.PI*R,frac=total?done/total:0;
+  let ticks='';for(let i=0;i<60;i++){const a=i*6*Math.PI/180,long=i%5===0,r1=long?48:51,r2=54;ticks+=`<line x1="${66+r1*Math.sin(a)}" y1="${66-r1*Math.cos(a)}" x2="${66+r2*Math.sin(a)}" y2="${66-r2*Math.cos(a)}" stroke="var(--ink-3)" stroke-width="${long?2:1}" stroke-linecap="round"/>`;}
+  const hand=frac*2*Math.PI;
+  return`<svg viewBox="0 0 132 132" aria-hidden="true">
+    <circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+    <circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--pool)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(C*frac).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 66 66)"/>
+    ${ticks}
+    ${total?`<line x1="${66+45*Math.sin(hand)}" y1="${66-45*Math.cos(hand)}" x2="${66+62*Math.sin(hand)}" y2="${66-62*Math.cos(hand)}" stroke="var(--rope-red)" stroke-width="3.5" stroke-linecap="round"/>`:''}
+  </svg>`;
+}
+function renderToday(){
+  const d=new Date(),di=d.getDay(),roll=getRoll();
+  const list=swimmers.filter(s=>scheduledOn(s,di)).sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  const extraIds=Object.keys(roll).filter(id=>!list.some(s=>s.id===id));
+  const extras=extraIds.map(id=>swimmers.find(s=>s.id===id)).filter(Boolean);
+  const all=list.concat(extras);
+  const marked=all.filter(s=>roll[s.id]!==undefined),present=all.filter(s=>roll[s.id]===1).length;
+  $('today-day').textContent=DAYS[di].name;
+  $('today-date').textContent=d.toLocaleDateString('ar-EG-u-nu-latn',{day:'numeric',month:'long',year:'numeric'});
+  $('clock').innerHTML=clockSVG(marked.length,all.length)+`<div class="clock-center"><div class="clock-big num">${marked.length}<span style="font-size:17px;color:var(--ink-3)">/${all.length}</span></div><div class="clock-small">تم تسجيلهم</div></div>`;
+  const expToday=list.filter(s=>status(s).k==='expired').length;
+  $('today-facts').innerHTML=
+    `<span class="chip ok">حضر <b class="num">${present}</b></span>`+
+    `<span class="chip bad">غاب <b class="num">${marked.length-present}</b></span>`+
+    (expToday?`<span class="chip warn">اشتراك منتهي <b class="num">${expToday}</b></span>`:'');
+  $('today-list').innerHTML=all.length?`<div class="lanes">${all.map(s=>rollLane(s,roll)).join('')}</div>`:
+    `<div class="lanes"><div class="empty">${emptyPool()}<b>لا يوجد سباحون مجدولون ${esc(DAYS[di].name)}</b>الكشف يُبنى من خانة «مواعيد التدريب». سجّل أي سباح حاضر من البحث بالأسفل.</div></div>`;
+  renderExtra();
+}
+function rollLane(s,roll){
+  const st=status(s),m=roll[s.id];
+  const btns=m===undefined
+    ?`<button class="yes" onclick="mark('${s.id}',1)" aria-label="حضر ${esc(s.name)}">حضر</button><button class="no" onclick="mark('${s.id}',0)" aria-label="غاب ${esc(s.name)}">غاب</button>`
+    :`<button class="done${m?'':' absent'}" disabled>${m?'حضر ✓':'غاب'}</button><button class="undo" onclick="unmark('${s.id}')">تراجع</button>`;
+  return`<div class="lane">
+    <span class="t-mark" style="${lvStyle(s.level)}"></span>
+    <button style="text-align:right;min-width:0" onclick="openSwimmer('${s.id}')">
+      <div class="lane-name">${esc(s.name)}</div>
+      <div class="lane-meta">${esc(s.schedule||'')}${s.coach?' · '+esc(s.coach):''}</div>
+      ${st.k==='expired'?`<div class="days bad">${esc(st.txt)}</div>`:''}
+    </button>
+    <div class="roll">${btns}</div>
+  </div>`;
+}
+function renderExtra(){
+  const q=norm($('extra-q').value);const el=$('extra-list');
+  if(!q){el.innerHTML='';return;}
+  const di=new Date().getDay(),roll=getRoll();
+  const res=swimmers.filter(s=>norm(s.name).includes(q)&&!scheduledOn(s,di)&&roll[s.id]===undefined).slice(0,8);
+  el.innerHTML=res.length?`<div class="lanes">${res.map(s=>rollLane(s,roll)).join('')}</div>`:`<div class="muted small" style="padding:4px 6px">لا نتائج خارج جدول اليوم.</div>`;
+}
+async function mark(id,v){
   const s=swimmers.find(x=>x.id===id);if(!s)return;
-  editId=id;
-  document.getElementById('f-name').value=s.name;
-  document.getElementById('f-dob').value=s.dob;
-  document.getElementById('f-level').value=s.level;
-  document.getElementById('f-coach').value=s.coach||'';
-  document.getElementById('f-parent').value=s.parent||'';
-  document.getElementById('f-phone').value=s.phone||'';
-  document.getElementById('f-start').value=s.start_date;
-  document.getElementById('f-duration').value=s.duration;
-  document.getElementById('f-fee').value=s.fee||'';
-  document.getElementById('f-branch').value=s.branch||'';
-  document.getElementById('f-schedule').value=s.schedule||'';
-  document.getElementById('f-notes').value=s.notes||'';
-  document.getElementById('form-mode-title').textContent='تعديل: '+s.name;
-  closeSheet(); switchTab('add');
+  const roll=getRoll();if(roll[id]!==undefined)return;
+  s.attendance.push(v);roll[id]=v;setRoll(roll);renderToday();
+  busy(true);
+  try{await sbUpdate('swimmers',id,{attendance:s.attendance});}
+  catch(e){s.attendance.pop();const r=getRoll();delete r[id];setRoll(r);toast('لم يُحفظ التسجيل. حاول مرة أخرى.',true);renderToday();}
+  busy(false);
 }
+async function unmark(id){
+  const s=swimmers.find(x=>x.id===id);if(!s)return;
+  const roll=getRoll();if(roll[id]===undefined)return;
+  const prev=roll[id],popped=s.attendance.pop();delete roll[id];setRoll(roll);renderToday();
+  busy(true);
+  try{await sbUpdate('swimmers',id,{attendance:s.attendance});}
+  catch(e){s.attendance.push(popped);const r=getRoll();r[id]=prev;setRoll(r);toast('تعذّر التراجع. حاول مرة أخرى.',true);renderToday();}
+  busy(false);
+}
+function emptyPool(){return`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 40c4 3 8 3 12 0s8-3 12 0 8 3 12 0 8-3 12 0"/><path d="M8 50c4 3 8 3 12 0s8-3 12 0 8 3 12 0 8-3 12 0"/><path d="M22 34V12a5 5 0 0 1 10 0M42 34V12a5 5 0 0 0-10 0M22 20h20M22 28h20"/></svg>`;}
 
+// ─── SWIMMERS LIST ───────────────────────────────────────
+function renderSwimmers(){
+  const q=norm($('q').value),st=$('f-status').value,lv=$('f-level').value,co=$('f-coach').value,br=$('f-branch').value,so=$('f-sort').value;
+  ['f-status','f-level','f-coach','f-branch'].forEach(id=>$(id).classList.toggle('set',!!$(id).value));
+  let data=swimmers.filter(s=>{
+    if(q&&!(norm(s.name).includes(q)||norm(s.parent).includes(q)||String(s.phone||'').includes(q)))return false;
+    if(st&&status(s).k!==st)return false;
+    if(lv&&s.level!==lv)return false;
+    if(co==='__none'?!!s.coach:(co&&s.coach!==co))return false;
+    if(br&&branchKey(s.branch)!==br)return false;
+    return true;
+  });
+  const cmp={name:(a,b)=>a.name.localeCompare(b.name,'ar'),expiry:(a,b)=>status(a).dl-status(b).dl,att:(a,b)=>(attOf(a).pct??101)-(attOf(b).pct??101),new:(a,b)=>String(b.created_at).localeCompare(String(a.created_at))}[so];
+  data.sort(cmp);
+  const filtered=q||st||lv||co||br;
+  $('count-line').textContent=filtered?`${data.length} من ${swimmers.length} سباح`:`${swimmers.length} سباح`;
+  $('clear-filters').hidden=!filtered;
+  $('swimmer-list').innerHTML=data.length?`<div class="lanes">${data.map(swimLane).join('')}</div>`:
+    `<div class="lanes"><div class="empty">${emptyPool()}<b>${swimmers.length?'لا يوجد سباح بهذه المواصفات':'لم يُسجَّل أي سباح بعد'}</b>${swimmers.length?'غيّر البحث أو امسح الفلاتر.':'اضغط «سباح جديد» لتسجيل أول سباح.'}</div></div>`;
+}
+function swimLane(s){
+  const st=status(s),a=attOf(s),age=ageOf(s.dob);
+  return`<button class="lane" onclick="openSwimmer('${s.id}')">
+    <span class="t-mark" style="${lvStyle(s.level)}"></span>
+    <div style="min-width:0">
+      <div class="lane-name">${esc(s.name)}</div>
+      <div class="lane-meta">${age!==null&&age>=0?age+' سنة · ':''}${esc(s.coach||'بدون مدرب')}${s.branch?' · '+esc(branchLabel(s.branch)):''}</div>
+      ${lapsHTML(s.attendance)}
+    </div>
+    <div class="lane-end">${lvPill(s.level)}<span class="days ${st.cls}">${esc(st.txt)}</span>${a.pct!==null?`<span class="small muted">حضور <bdi class="num">${a.pct}%</bdi></span>`:''}</div>
+  </button>`;
+}
+function clearFilters(){['q','f-status','f-level','f-coach','f-branch'].forEach(id=>$(id).value='');renderSwimmers();}
+
+// ─── SWIMMER SHEET ───────────────────────────────────────
+function openSheet(html){$('sheet-content').innerHTML=html;$('scrim').classList.add('on');$('sheet').classList.add('on');$('sheet').scrollTop=0;}
+function closeSheet(){$('scrim').classList.remove('on');$('sheet').classList.remove('on');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+
+function openSwimmer(id){
+  const s=swimmers.find(x=>x.id===id);if(!s)return;
+  const st=status(s),a=attOf(s),age=ageOf(s.dob),ex=expiryOf(s),wa=waNumber(s.phone),tel=telNumber(s.phone);
+  const ladder=LEVELS.map(l=>`<button class="${l===s.level?'on':''}${l==='نخبة'?' dark':''}" style="${lvStyle(l)}" onclick="setLevel('${s.id}','${l}')" aria-pressed="${l===s.level}">${esc(l)}</button>`).join('');
+  const sessions=s.attendance.map((v,i)=>`<button class="${v?'p':'a'}" onclick="toggleSession('${s.id}',${i})" aria-label="جلسة ${i+1}: ${v?'حضر':'غاب'}">${i+1}</button>`).join('');
+  const msg=encodeURIComponent(`مرحبًا ${s.parent||''}، اشتراك ${s.name} في أكاديمية Will Be Team ${st.k==='expired'?'انتهى بتاريخ':'ينتهي بتاريخ'} ${fmtDate(ex)}. برجاء التواصل للتجديد.`);
+  openSheet(`
+    <div class="sheet-head">
+      <span class="t-mark" style="${lvStyle(s.level)};min-height:52px"></span>
+      <div style="min-width:0">
+        <h2 id="sheet-title">${esc(s.name)}</h2>
+        <div class="muted small">${age!==null&&age>=0?age+' سنة · ':''}${esc(s.coach||'بدون مدرب')}${s.branch?' · '+esc(branchLabel(s.branch)):''}</div>
+      </div>
+      <button class="close" onclick="closeSheet()" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="trio">
+        <div class="stat"><b class="num"><bdi>${a.pct===null?'—':a.pct+'%'}</bdi></b><span>الحضور (${a.p}/${a.n})</span></div>
+        <div class="stat"><b class="num" style="color:var(--${st.cls==='ok'?'ok':st.cls==='warn'?'warn':'bad'})">${st.dl<0?'منتهي':st.dl}</b><span>${st.dl<0?'منذ '+(-st.dl)+' يوم':'يوم متبقٍ'}</span></div>
+        <div class="stat"><b class="num">${Number(s.fee||0).toLocaleString('en-US')}</b><span>جنيه / ${s.duration||1} شهر</span></div>
+      </div>
+      <div class="actions">
+        <a class="act${tel?'':' off'}" ${tel?`href="tel:${esc(tel)}"`:''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>اتصال</a>
+        <a class="act${wa?'':' off'}" ${wa?`href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener"`:''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-4.6A8.5 8.5 0 1 1 8 19.6z"/></svg>واتساب</a>
+        <button class="act" onclick="renew('${s.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>تجديد</button>
+        <button class="act" onclick="editSwimmer('${s.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></svg>تعديل</button>
+      </div>
+      <div class="two" style="margin-bottom:4px">
+        <button class="btn btn-soft" onclick="addSession('${s.id}',1)">+ جلسة حضور</button>
+        <button class="btn btn-ghost" onclick="addSession('${s.id}',0)">+ جلسة غياب</button>
+      </div>
+
+      <div class="sec-title">المستوى</div>
+      <div class="ladder">${ladder}</div>
+
+      <div class="sec-title">سجل الجلسات <span style="font-weight:400">(اضغط الجلسة لتبديل حالتها)</span></div>
+      ${sessions?`<div class="session-grid">${sessions}</div>
+      <div class="legend"><span><i style="background:var(--ok-wash);border:1px solid var(--ok)"></i>حضر</span><span><i style="background:var(--bad-wash);border:1px solid var(--bad)"></i>غاب</span></div>`
+      :'<div class="muted small">لم تُسجَّل جلسات بعد.</div>'}
+
+      <div class="sec-title">البيانات</div>
+      <div class="facts">
+        <div class="fact"><span>تاريخ الميلاد</span><b class="num">${fmtDate(s.dob)}</b></div>
+        <div class="fact"><span>ولي الأمر</span><b>${esc(s.parent||'—')}</b></div>
+        <div class="fact"><span>التليفون</span><b class="num" dir="ltr">${esc(s.phone||'—')}</b></div>
+        <div class="fact"><span>الاشتراك</span><b class="num">${fmtDate(s.start_date)} ← ${fmtDate(ex)}</b></div>
+        <div class="fact"><span>المواعيد</span><b>${esc(s.schedule||'—')}</b></div>
+        ${s.notes&&s.notes.trim()?`<div class="fact"><span>ملاحظات</span><b>${esc(s.notes.trim())}</b></div>`:''}
+      </div>
+      <button class="btn btn-danger btn-block" style="margin-top:18px" onclick="deleteSwimmer('${s.id}')">حذف السباح</button>
+    </div>`);
+}
+async function patchSwimmer(id,data,okMsg){
+  const s=swimmers.find(x=>x.id===id);if(!s)return false;
+  const before={...s,attendance:[...s.attendance]};
+  Object.assign(s,data);
+  busy(true);
+  try{await sbUpdate('swimmers',id,data);if(okMsg)toast(okMsg);busy(false);return true;}
+  catch(e){console.error(e);Object.assign(s,before);toast('لم يُحفظ التعديل. حاول مرة أخرى.',true);busy(false);return false;}
+}
+async function setLevel(id,l){const s=swimmers.find(x=>x.id===id);if(!s||s.level===l)return;await patchSwimmer(id,{level:l},`المستوى الآن: ${l}`);openSwimmer(id);render();}
+async function toggleSession(id,i){const s=swimmers.find(x=>x.id===id);if(!s)return;const a=[...s.attendance];a[i]=a[i]?0:1;await patchSwimmer(id,{attendance:a});openSwimmer(id);render();}
+async function addSession(id,v){const s=swimmers.find(x=>x.id===id);if(!s)return;await patchSwimmer(id,{attendance:[...s.attendance,v]},v?'سُجّلت جلسة حضور':'سُجّلت جلسة غياب');openSwimmer(id);render();}
+async function renew(id){
+  const s=swimmers.find(x=>x.id===id);if(!s)return;
+  const st=status(s),start=st.dl<0?todayISO():expiryOf(s),end=addMonths(start,s.duration||1);
+  if(!confirm(`تجديد اشتراك ${s.name} لمدة ${s.duration||1} شهر\nمن ${fmtDate(start)} إلى ${fmtDate(end)}\nالرسوم: ${s.fee||0} جنيه`))return;
+  await patchSwimmer(id,{start_date:start},'تم تجديد الاشتراك');openSwimmer(id);render();
+}
 async function deleteSwimmer(id){
   const s=swimmers.find(x=>x.id===id);if(!s)return;
-  if(!confirm('هل تريد حذف '+s.name+'؟'))return;
-  setSyncing(true);
+  if(!confirm(`حذف ${s.name} نهائيًا مع سجل حضوره؟`))return;
+  busy(true);
+  try{await sbDelete('swimmers',id);swimmers=swimmers.filter(x=>x.id!==id);closeSheet();fillSelects();render();toast('تم حذف السباح');}
+  catch(e){toast('لم يتم الحذف. حاول مرة أخرى.',true);}
+  busy(false);
+}
+
+// ─── FORM ────────────────────────────────────────────────
+function dayChips(){$('daypick').innerHTML=WEEK_ORDER.map(i=>`<button type="button" data-d="${i}" onclick="toggleDay(${i})">${DAYS[i].name}</button>`).join('');}
+function syncDayChips(){const s={schedule:$('s-schedule').value};$('daypick').querySelectorAll('button').forEach(b=>{const on=scheduledOn(s,+b.dataset.d);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});}
+function toggleDay(i){
+  const inp=$('s-schedule');let t=inp.value;
+  if(scheduledOn({schedule:t},i)){
+    // remove any word containing this day's stem, then tidy connectors
+    t=t.split(/\s+/).filter(w=>!DAYS[i].stems.some(st=>norm(w).includes(st))).join(' ');
+    t=t.replace(/^(و\s*)+/,'').replace(/\s+و\s*$/,'').replace(/\s+/g,' ').trim();
+  }else{
+    const days=WEEK_ORDER.filter(d=>d===i||scheduledOn({schedule:t},d));
+    const rest=t.split(/\s+/).filter(w=>w!=='و'&&!DAYS.some(D=>D.stems.some(st=>norm(w).includes(st)))).join(' ').trim();
+    t=days.map(d=>DAYS[d].name).join(' و')+(rest?' '+rest:'');
+  }
+  inp.value=t;syncDayChips();
+}
+function openForm(){editId=null;clearForm();$('form-title').textContent='سباح جديد';$('save-btn').textContent='حفظ السباح';go('form');$('s-name').focus();}
+function clearForm(){
+  ['s-name','s-dob','s-parent','s-phone','s-branch','s-fee','s-schedule','s-notes'].forEach(id=>{$(id).value='';$(id).classList.remove('bad-input');});
+  $('s-level').value='مبتدئ';$('s-coach').value='';$('s-duration').value='1';$('s-start').value=todayISO();syncDayChips();
+}
+function editSwimmer(id){
+  const s=swimmers.find(x=>x.id===id);if(!s)return;
+  closeSheet();go('form');editId=id;
+  $('s-name').value=s.name||'';$('s-dob').value=s.dob||'';$('s-level').value=LEVELS.includes(s.level)?s.level:'مبتدئ';
+  $('s-parent').value=s.parent||'';$('s-phone').value=s.phone||'';
+  if(s.coach&&!coaches.some(c=>c.name===s.coach))$('s-coach').insertAdjacentHTML('beforeend',`<option value="${esc(s.coach)}">${esc(s.coach)} (غير مسجّل)</option>`);
+  $('s-coach').value=s.coach||'';$('s-branch').value=branchLabel(s.branch);$('s-start').value=s.start_date||todayISO();
+  const dur=String(s.duration||1);if(![...$('s-duration').options].some(o=>o.value===dur))$('s-duration').insertAdjacentHTML('beforeend',`<option value="${dur}">${dur} شهور</option>`);
+  $('s-duration').value=dur;$('s-fee').value=s.fee||'';$('s-schedule').value=s.schedule||'';$('s-notes').value=s.notes||'';
+  syncDayChips();$('form-title').textContent='تعديل: '+s.name;$('save-btn').textContent='حفظ التعديلات';
+}
+function cancelForm(){const id=editId;editId=null;go(id?'swimmers':'swimmers');if(id)openSwimmer(id);}
+async function saveSwimmer(){
+  const req=['s-name','s-dob','s-start'];let miss=false;
+  req.forEach(id=>{const bad=!$(id).value.trim();$(id).classList.toggle('bad-input',bad);if(bad)miss=true;});
+  if(miss){toast('أكمل الاسم وتاريخ الميلاد وبداية الاشتراك.',true);return;}
+  if($('s-dob').value>todayISO()){$('s-dob').classList.add('bad-input');toast('تاريخ الميلاد في المستقبل. راجع السنة.',true);return;}
+  const data={name:$('s-name').value.trim(),dob:$('s-dob').value,level:$('s-level').value,coach:$('s-coach').value,parent:$('s-parent').value.trim(),phone:$('s-phone').value.trim(),start_date:$('s-start').value,duration:parseInt($('s-duration').value)||1,fee:parseInt($('s-fee').value)||0,branch:$('s-branch').value.trim(),schedule:$('s-schedule').value.trim(),notes:$('s-notes').value};
+  if(!editId){
+    const dup=swimmers.find(s=>norm(s.name)===norm(data.name)&&s.dob===data.dob);
+    if(dup&&!confirm(`يوجد سباح بنفس الاسم وتاريخ الميلاد (${dup.name}). إضافة سجل جديد على أي حال؟`))return;
+  }
+  $('save-btn').disabled=true;busy(true);
   try{
-    await sbDelete('swimmers',id);
-    swimmers=swimmers.filter(x=>x.id!==id);
-    closeSheet(); updateStats(); updateCoachSelects(); renderList();
-    showToast('تم الحذف');
-  }catch(e){showToast('خطأ في الحذف ⚠️');}
-  setSyncing(false);
+    let id=editId;
+    if(editId){await sbUpdate('swimmers',editId,data);Object.assign(swimmers.find(s=>s.id===editId),data);toast('تم حفظ التعديلات');}
+    else{data.attendance=[];const res=await sbInsert('swimmers',data);const row=res[0];row.attendance=row.attendance||[];swimmers.push(row);id=row.id;toast('تم تسجيل السباح');}
+    editId=null;fillSelects();go('swimmers');openSwimmer(id);
+  }catch(e){console.error(e);toast('لم يتم الحفظ. تحقق من الاتصال وحاول مرة أخرى.',true);}
+  $('save-btn').disabled=false;busy(false);
 }
 
 // ─── COACHES ─────────────────────────────────────────────
 function renderCoaches(){
-  const el=document.getElementById('coaches-list');
-  if(!coaches.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">🏅</div><div class="empty-text">لا يوجد مدربون بعد\nاضغط إضافة مدرب جديد</div></div>';return;}
+  const el=$('coach-list');
+  if(!coaches.length){el.innerHTML=`<div class="lanes"><div class="empty">${emptyPool()}<b>لم يُسجَّل أي مدرب بعد</b>اضغط «مدرب جديد» للإضافة.</div></div>`;return;}
   el.innerHTML=coaches.map(c=>{
-    const ms=swimmers.filter(s=>s.coach===c.name);
-    const sl=ms.length?ms.map(s=>`<div class="coach-sw-item"><div class="avatar" style="width:28px;height:28px;font-size:11px;background:${AB[s.level]||'#f1f5f9'};color:${AC[s.level]||'#475569'}">${initials(s.name)}</div><span style="flex:1">${s.name}</span><span class="badge ${LB[s.level]||'badge-blue'}" style="font-size:10px;padding:2px 7px">${s.level}</span></div>`).join(''):'<div style="font-size:12px;color:var(--text3);padding:6px 0">لا يوجد سباحون مرتبطون</div>';
-    return`<div class="coach-card">
-      <div class="coach-card-top">
-        <div class="coach-avatar">${initials(c.name)}</div>
-        <div style="flex:1;min-width:0"><div class="coach-name">${c.name}</div><div class="coach-meta">${c.spec||'مدرب سباحة'}${c.branch?' · '+c.branch:''}</div>${c.phone?`<div class="coach-meta">📞 ${c.phone}</div>`:''}</div>
+    const ms=swimmers.filter(s=>s.coach===c.name),act=ms.filter(s=>status(s).k!=='expired').length;
+    const at=ms.map(attOf).filter(a=>a.n);const avg=at.length?Math.round(at.reduce((x,a)=>x+a.pct,0)/at.length):null;
+    const mix=LEVELS.map(l=>{const n=ms.filter(s=>s.level===l).length;return n?`<i style="width:${n/ms.length*100}%;background:${LV_VAR[l]}" title="${l}: ${n}"></i>`:'';}).join('');
+    return`<article class="coach">
+      <div class="coach-top"><div class="whistle">${esc(initials(c.name))}</div>
+        <div style="min-width:0;flex:1"><div class="coach-name">${esc(c.name)}</div><div class="coach-sub">${esc((c.spec||'').trim()||'مدرب سباحة')}${c.branch&&c.branch.trim()?' · '+esc(branchLabel(c.branch)):''}</div></div></div>
+      <div class="coach-stats">
+        <div class="stat"><b class="num">${ms.length}</b><span>سباح</span></div>
+        <div class="stat"><b class="num">${act}</b><span>اشتراك فعال</span></div>
+        <div class="stat"><b class="num"><bdi>${avg===null?'—':avg+'%'}</bdi></b><span>متوسط الحضور</span></div>
       </div>
-      <div class="coach-card-bottom">
-        <span class="coach-badge">🏊 ${ms.length} سباح</span>
-        <div class="coach-actions">
-          <button class="btn-sm btn-sm-edit" onclick="openCoachModal('${c.id}')">تعديل</button>
-          <button class="btn-sm btn-sm-del" onclick="deleteCoach('${c.id}')">حذف</button>
-        </div>
+      ${ms.length?`<div class="mix" aria-label="توزيع المستويات">${mix}</div>`:''}
+      <div class="coach-actions">
+        <button class="btn btn-soft" style="flex:1" onclick="showCoachSwimmers('${c.id}')">عرض السباحين</button>
+        ${c.phone&&c.phone.trim()?`<a class="btn btn-ghost" href="tel:${esc(c.phone.trim())}" aria-label="اتصال">اتصال</a>`:''}
+        <button class="btn btn-ghost" onclick="openCoach('${c.id}')">تعديل</button>
       </div>
-      <div class="coach-swimmers">${sl}</div>
-    </div>`;
-  }).join('');
+    </article>`;
+  }).join('')+orphanCoaches();
 }
-
-function openCoachModal(id){
-  editCoachId=id||null;
-  if(id){const c=coaches.find(x=>x.id===id);if(!c)return;document.getElementById('cm-name').value=c.name;document.getElementById('cm-spec').value=c.spec||'';document.getElementById('cm-phone').value=c.phone||'';document.getElementById('cm-branch').value=c.branch||'';document.getElementById('coach-modal-title').textContent='تعديل: '+c.name;}
-  else{['cm-name','cm-spec','cm-phone','cm-branch'].forEach(id=>document.getElementById(id).value='');document.getElementById('coach-modal-title').textContent='إضافة مدرب جديد';}
-  document.getElementById('coach-modal').classList.add('open');
+function orphanCoaches(){
+  const names=[...new Set(swimmers.map(s=>s.coach).filter(n=>n&&!coaches.some(c=>c.name===n)))];
+  window._orphans=names;if(!names.length)return'';
+  return`<div class="card"><h3>أسماء مدربين غير مسجّلة<small>مذكورة في بيانات السباحين فقط</small></h3>${names.map(n=>`<div class="row"><div class="row-main"><b>${esc(n)}</b><span>${swimmers.filter(s=>s.coach===n).length} سباح</span></div><button class="btn btn-soft" onclick="openCoach(null,window._orphans[${names.indexOf(n)}])">تسجيل</button></div>`).join('')}</div>`;
 }
-
-function closeCoachModal(e){if(e&&e.target!==document.getElementById('coach-modal'))return;document.getElementById('coach-modal').classList.remove('open');editCoachId=null;}
-
-async function saveCoach(){
-  const name=document.getElementById('cm-name').value.trim();
-  if(!name){showToast('اسم المدرب مطلوب ⚠️');return;}
-  const data={name,spec:document.getElementById('cm-spec').value,phone:document.getElementById('cm-phone').value,branch:document.getElementById('cm-branch').value};
-  setSyncing(true);
+function showCoachSwimmers(id){const c=coaches.find(x=>x.id===id);if(!c)return;fillSelects();$('f-coach').value=c.name;go('swimmers');}
+function openCoach(id,presetName){
+  const c=id?coaches.find(x=>x.id===id):null;
+  openSheet(`
+    <div class="sheet-head"><div><h2 id="sheet-title">${c?'تعديل: '+esc(c.name):'مدرب جديد'}</h2></div>
+      <button class="close" onclick="closeSheet()" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="field"><label for="c-name">اسم المدرب <em>*</em></label><input id="c-name" value="${esc(c?c.name:presetName||'')}"></div>
+      <div class="field"><label for="c-spec">التخصص</label><input id="c-spec" value="${esc(c?c.spec:'')}" placeholder="مثال: تعليمي، إعداد، فرق"></div>
+      <div class="two">
+        <div class="field"><label for="c-phone">التليفون</label><input id="c-phone" type="tel" dir="ltr" style="text-align:right" value="${esc(c?c.phone:'')}"></div>
+        <div class="field"><label for="c-branch">الفرع</label><input id="c-branch" list="branch-options" value="${esc(c?branchLabel(c.branch):'')}"></div>
+      </div>
+      ${c?`<div class="hint" style="margin-bottom:12px">تغيير الاسم يُحدَّث تلقائيًا عند كل سباحي هذا المدرب.</div>`:''}
+      <div class="form-actions">
+        <button class="btn btn-primary" id="c-save" onclick="saveCoach(${c?`'${c.id}'`:'null'})">${c?'حفظ التعديلات':'حفظ المدرب'}</button>
+        ${c?`<button class="btn btn-danger" onclick="deleteCoach('${c.id}')">حذف</button>`:''}
+      </div>
+    </div>`);
+  setTimeout(()=>$('c-name').focus(),250);
+}
+async function saveCoach(id){
+  const name=$('c-name').value.trim();if(!name){$('c-name').classList.add('bad-input');toast('اسم المدرب مطلوب.',true);return;}
+  const data={name,spec:$('c-spec').value.trim(),phone:$('c-phone').value.trim(),branch:$('c-branch').value.trim()};
+  $('c-save').disabled=true;busy(true);
   try{
-    if(editCoachId){
-      await sbUpdate('coaches',editCoachId,data);
-      const i=coaches.findIndex(c=>c.id===editCoachId);coaches[i]={...coaches[i],...data};
-    } else {
-      const res=await sbInsert('coaches',data);
-      coaches.push(res[0]||{...data,id:Date.now().toString()});
-    }
-    editCoachId=null;
-    document.getElementById('coach-modal').classList.remove('open');
-    updateCoachSelects(); renderCoaches();
-    showToast('تم حفظ المدرب ✓');
-  }catch(e){showToast('خطأ في الحفظ ⚠️');console.error(e);}
-  setSyncing(false);
+    if(id){
+      const c=coaches.find(x=>x.id===id),old=c.name;
+      await sbUpdate('coaches',id,data);Object.assign(c,data);
+      if(old!==name){const linked=swimmers.filter(s=>s.coach===old);await Promise.all(linked.map(s=>sbUpdate('swimmers',s.id,{coach:name})));linked.forEach(s=>s.coach=name);}
+    }else{const res=await sbInsert('coaches',data);coaches.push(res[0]);}
+    closeSheet();fillSelects();render();toast('تم حفظ المدرب');
+  }catch(e){console.error(e);toast('لم يتم الحفظ. حاول مرة أخرى.',true);const b=$('c-save');if(b)b.disabled=false;}
+  busy(false);
 }
-
 async function deleteCoach(id){
   const c=coaches.find(x=>x.id===id);if(!c)return;
-  const linked=swimmers.filter(s=>s.coach===c.name).length;
-  if(!confirm((linked>0?`المدرب مرتبط بـ ${linked} سباح. `:'')+`هل تريد حذف ${c.name}؟`))return;
-  setSyncing(true);
+  const linked=swimmers.filter(s=>s.coach===c.name);
+  if(!confirm(`حذف المدرب ${c.name}؟`+(linked.length?`\n${linked.length} سباح سيصبحون «بدون مدرب».`:'')))return;
+  busy(true);
   try{
-    if(linked>0){
-      await Promise.all(swimmers.filter(s=>s.coach===c.name).map(s=>sbUpdate('swimmers',s.id,{coach:''})));
-      swimmers.forEach(s=>{if(s.coach===c.name)s.coach='';});
-    }
-    await sbDelete('coaches',id);
-    coaches=coaches.filter(x=>x.id!==id);
-    updateCoachSelects(); renderCoaches();
-    showToast('تم حذف المدرب');
-  }catch(e){showToast('خطأ في الحذف ⚠️');}
-  setSyncing(false);
+    await Promise.all(linked.map(s=>sbUpdate('swimmers',s.id,{coach:''})));linked.forEach(s=>s.coach='');
+    await sbDelete('coaches',id);coaches=coaches.filter(x=>x.id!==id);
+    closeSheet();fillSelects();render();toast('تم حذف المدرب');
+  }catch(e){toast('لم يتم الحذف. حاول مرة أخرى.',true);}
+  busy(false);
 }
 
-// ─── REPORT ──────────────────────────────────────────────
-function renderReport(){
-  const lv={},cm={};
-  swimmers.forEach(s=>{lv[s.level]=(lv[s.level]||0)+1;const cn=s.coach||'بدون مدرب';cm[cn]=(cm[cn]||0)+1;});
-  const t=swimmers.length||1,bc=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7'];
-  document.getElementById('level-dist').innerHTML=Object.keys(lv).map((l,i)=>`<div class="dist-row"><div class="dist-label">${l}</div><div class="dist-bar-wrap"><div class="dist-bar" style="width:${Math.round(lv[l]/t*100)}%;background:${bc[i%5]}"></div></div><div class="dist-count">${lv[l]}</div></div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد بيانات</div>';
-  document.getElementById('coach-dist').innerHTML=Object.keys(cm).map(c=>`<div class="dist-row"><div class="dist-label">${c}</div><div class="dist-bar-wrap"><div class="dist-bar" style="width:${Math.round(cm[c]/t*100)}%;background:#0284c7"></div></div><div class="dist-count">${cm[c]}</div></div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد بيانات</div>';
-  const ex=swimmers.filter(s=>{const d=daysLeft(calcExpiry(s.start_date,s.duration));return d>=0&&d<=30;});
-  document.getElementById('expiry-list').innerHTML=ex.length?ex.map(s=>{const d=daysLeft(calcExpiry(s.start_date,s.duration));return`<div class="expiry-item"><div><div class="expiry-name">${s.name}</div><div class="expiry-coach-lbl">${s.coach||'—'}</div></div><span class="expiry-tag ${d<=7?'expiry-exp':'expiry-warn'}">${d} يوم</span></div>`;}).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">🎉 لا توجد اشتراكات تنتهي قريباً</div>';
+// ─── REPORTS ─────────────────────────────────────────────
+function bars(entries,colorFn){
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  return entries.map(([l,n],i)=>`<div class="bar"><span class="bar-label" title="${esc(l)}">${esc(l)}</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${n/max*100}%;background:${colorFn?colorFn(l,i):'var(--pool)'}"></span></span><span class="bar-n num">${n}</span></div>`).join('');
 }
+function renderReports(){
+  const t=swimmers.length;
+  const st=swimmers.map(s=>({s,st:status(s)}));
+  const active=st.filter(x=>x.st.k!=='expired'),soon=st.filter(x=>x.st.k==='soon'),expired=st.filter(x=>x.st.k==='expired');
+  const withAtt=swimmers.map(attOf).filter(a=>a.n);
+  const avg=withAtt.length?Math.round(withAtt.reduce((x,a)=>x+a.pct,0)/withAtt.length):null;
+  const revenue=active.reduce((x,{s})=>x+(Number(s.fee)||0)/(s.duration||1),0);
+  const lv=LEVELS.map(l=>[l,swimmers.filter(s=>s.level===l).length]).filter(e=>e[1]);
+  const cm={};swimmers.forEach(s=>{const k=s.coach||'بدون مدرب';cm[k]=(cm[k]||0)+1;});
+  const bm={};swimmers.forEach(s=>{const k=branchKey(s.branch);const l=k?branchLabel(s.branch):'غير محدد';bm[k]=bm[k]||[l,0];bm[k][1]++;});
+  const ages={'أقل من 5 سنوات':0,'من 5 إلى 8':0,'من 9 إلى 12':0,'13 فأكثر':0};
+  swimmers.forEach(s=>{const a=ageOf(s.dob);if(a===null||a<0)return;if(a<5)ages['أقل من 5 سنوات']++;else if(a<=8)ages['من 5 إلى 8']++;else if(a<=12)ages['من 9 إلى 12']++;else ages['13 فأكثر']++;});
+  // renewals: expired in last 30 days or expiring in next 7 → most actionable first
+  const renewals=st.filter(x=>x.st.dl<=7&&x.st.dl>=-30).sort((a,b)=>(a.st.dl>=0?a.st.dl:1000-a.st.dl)-(b.st.dl>=0?b.st.dl:1000-b.st.dl));
+  // data quality
+  const groups={};swimmers.forEach(s=>{const k=norm(s.name).replace(/\s/g,'')+'|'+s.dob;(groups[k]=groups[k]||[]).push(s);});
+  const dups=Object.values(groups).filter(g=>g.length>1);
+  const futureDob=swimmers.filter(s=>s.dob&&s.dob>todayISO());
+  const noCoach=swimmers.filter(s=>!s.coach).length,noPhone=swimmers.filter(s=>!waNumber(s.phone)).length,noSched=swimmers.filter(s=>!WEEK_ORDER.some(d=>scheduledOn(s,d))).length;
 
-// ─── TOAST ───────────────────────────────────────────────
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+  $('report').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><b class="num">${t}</b><span>إجمالي السباحين</span></div>
+      <div class="kpi"><b class="num" style="color:var(--ok)">${active.length}</b><span>اشتراك فعال</span></div>
+      <div class="kpi"><b class="num" style="color:var(--warn)">${soon.length}</b><span>ينتهي خلال 7 أيام</span></div>
+      <div class="kpi"><b class="num" style="color:var(--bad)">${expired.length}</b><span>اشتراك منتهي</span></div>
+      <div class="kpi wide"><span>متوسط نسبة الحضور</span><b class="num"><bdi>${avg===null?'—':avg+'%'}</bdi></b></div>
+      <div class="kpi wide"><span>قيمة الاشتراكات الفعالة شهريًا</span><b class="num">${Math.round(revenue).toLocaleString('en-US')} <small style="font-size:14px;font-weight:500">جنيه</small></b></div>
+    </div>
+
+    <div class="card"><h3>تجديدات مطلوبة<small>منتهية خلال آخر 30 يوم أو تنتهي خلال 7 أيام</small></h3>
+      ${renewals.length?renewals.map(({s,st})=>{const wa=waNumber(s.phone);const msg=encodeURIComponent(`مرحبًا ${s.parent||''}، اشتراك ${s.name} في أكاديمية Will Be Team ${st.dl<0?'انتهى بتاريخ':'ينتهي بتاريخ'} ${fmtDate(expiryOf(s))}. برجاء التواصل للتجديد.`);
+        return`<div class="row"><div class="row-main"><button style="text-align:right;width:100%" onclick="openSwimmer('${s.id}')"><b>${esc(s.name)}</b><span class="days ${st.cls}">${esc(st.txt)}</span><span> · ${esc(s.coach||'بدون مدرب')}</span></button></div>${wa?`<a class="wa" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" aria-label="تذكير واتساب لـ ${esc(s.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-4.6A8.5 8.5 0 1 1 8 19.6z"/></svg></a>`:'<span class="small muted">لا يوجد رقم</span>'}</div>`;}).join(''):'<div class="muted small">لا توجد تجديدات عاجلة.</div>'}
+    </div>
+
+    <div class="card"><h3>المستويات</h3>${bars(lv,l=>LV_VAR[l])||'<div class="muted small">لا توجد بيانات.</div>'}</div>
+    <div class="card"><h3>الفئات العمرية</h3>${bars(Object.entries(ages).filter(e=>e[1]))}</div>
+    <div class="card"><h3>السباحون لكل مدرب</h3>${bars(Object.entries(cm).sort((a,b)=>b[1]-a[1]))}</div>
+    <div class="card"><h3>الفروع<small>بعد توحيد طريقة كتابة الاسم</small></h3>${bars(Object.values(bm).sort((a,b)=>b[1]-a[1]))}</div>
+
+    <div class="card"><h3>جودة البيانات</h3>
+      ${dups.length?`<div class="issue"><b>${dups.length} سجل مكرر محتمل</b> (نفس الاسم وتاريخ الميلاد): ${dups.map(g=>`<button onclick="openSwimmer('${g[0].id}')">${esc(g[0].name)} ×${g.length}</button>`).join('، ')}</div>`:''}
+      ${futureDob.length?`<div class="issue"><b>${futureDob.length} تاريخ ميلاد غير منطقي</b> (في المستقبل): ${futureDob.map(s=>`<button onclick="openSwimmer('${s.id}')">${esc(s.name)}</button>`).join('، ')}</div>`:''}
+      <div class="bar"><span class="bar-label">بدون مدرب</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${t?noCoach/t*100:0}%;background:var(--warn)"></span></span><span class="bar-n num">${noCoach}</span></div>
+      <div class="bar"><span class="bar-label">بدون رقم صالح</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${t?noPhone/t*100:0}%;background:var(--warn)"></span></span><span class="bar-n num">${noPhone}</span></div>
+      <div class="bar"><span class="bar-label">بدون أيام تدريب</span><span class="bar-track"><span class="bar-fill" style="display:block;width:${t?noSched/t*100:0}%;background:var(--warn)"></span></span><span class="bar-n num">${noSched}</span></div>
+      <div class="hint">السباح بدون أيام تدريب لا يظهر في كشف حضور اليوم.</div>
+    </div>`;
+}
 
 // ─── INIT ────────────────────────────────────────────────
-document.getElementById('f-start').value=new Date().toISOString().split('T')[0];
-// Kill any old service workers
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW:',e));
-}
+dayChips();clearForm();go('today');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW:',e));}
 loadAll();
+
 </script>
 </body>
 </html>
