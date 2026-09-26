@@ -5,7 +5,7 @@
 //   - Supabase / any API call : never cached, always network
 // Bump CACHE_VERSION on every deploy to purge old caches.
 
-const CACHE_VERSION = 'wbt-v1';
+const CACHE_VERSION = 'wbt-v3';
 const SHELL = [
   './',
   './index.html',
