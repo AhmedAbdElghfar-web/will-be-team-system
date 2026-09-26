@@ -1,12 +1,12 @@
 {
   "name": "أكاديمية Will Be Team",
   "short_name": "Will Be Team",
-  "description": "نظام متابعة السباحين",
+  "description": "أكاديمية السباحة · متابعة السباحين",
   "start_url": "/will-be-team-system/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0284c7",
-  "theme_color": "#0284c7",
+  "background_color": "#EDF3F4",
+  "theme_color": "#0A6E8F",
   "lang": "ar",
   "dir": "rtl",
   "icons": [
