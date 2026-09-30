@@ -437,8 +437,8 @@ button.lane:hover{background:var(--surface-2)}
         </div>
         <div class="two">
           <div class="field"><label for="s-start">بداية الاشتراك <em>*</em></label><input id="s-start" type="date"></div>
-          <div class="field"><label for="s-duration">المدة</label>
-            <select id="s-duration"><option value="1">شهر</option><option value="2">شهران</option><option value="3">3 شهور</option><option value="6">6 شهور</option><option value="12">سنة</option></select>
+          <div class="field"><label>الباقة</label>
+            <div class="input-static" style="min-height:44px;display:flex;align-items:center;font-weight:700">8 جلسات / شهر</div>
           </div>
         </div>
         <div class="field"><label for="s-fee">الرسوم (جنيه)</label><input id="s-fee" type="number" inputmode="numeric" min="0"></div>
@@ -537,7 +537,10 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function norm(t){return String(t||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\u064B-\u0652]/g,'').replace(/\s+/g,' ').trim().toLowerCase();}
 function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
 function addMonths(iso,m){const [y,mo,d]=iso.split('-').map(Number);const dt=new Date(Date.UTC(y,mo-1+Number(m||1),d));return dt.toISOString().slice(0,10);}
-function expiryOf(s){return addMonths(s.start_date,s.duration||1);}
+const PLAN_SESSIONS=8; // single plan: 8 sessions per month
+function expiryOf(s){return addMonths(s.start_date,1);}
+function usedOf(s){return (s.attendance||[]).slice(Number(s.sessions_base)||0).filter(Boolean).length;}
+function leftOf(s){return Math.max(0,PLAN_SESSIONS-usedOf(s));}
 function daysLeft(iso){const a=new Date(iso+'T00:00:00'),b=new Date(todayISO()+'T00:00:00');return Math.round((a-b)/86400000);}
 function ageOf(dob){if(!dob)return null;const b=new Date(dob),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a;}
 function attOf(s){const a=s.attendance||[];return{n:a.length,p:a.filter(Boolean).length,pct:a.length?Math.round(a.filter(Boolean).length/a.length*100):null};}
@@ -547,7 +550,8 @@ function branchKey(b){return norm(b).replace(/^gps\.?\s*/,'')||'';}
 function branchLabel(b){return String(b||'').replace(/\s+/g,' ').trim();}
 function waNumber(p){let d=String(p||'').replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===11&&d.startsWith('01'))d='2'+d;return d.length>=11?d:null;}
 function telNumber(p){const d=String(p||'').replace(/[^\d+]/g,'');return d.replace(/^\+?/,'').length>=8?d:null;}
-function status(s){const dl=daysLeft(expiryOf(s));return dl<0?{k:'expired',cls:'bad',txt:`منتهي منذ ${-dl} يوم`,dl}:dl<=7?{k:'soon',cls:'warn',txt:dl===0?'ينتهي اليوم':`باقي ${dl} يوم`,dl}:{k:'active',cls:'ok',txt:`باقي ${dl} يوم`,dl};}
+function status(s){const dl=daysLeft(expiryOf(s)),left=leftOf(s);if(dl>=0&&left===0)return{k:'expired',cls:'bad',txt:'انتهت الجلسات الـ'+PLAN_SESSIONS,dl,left,done:true};const r=_status(dl);r.left=left;if(r.k==='active'&&left<=2){r.k='soon';r.cls='warn';}r.txt+=` · ${left}/${PLAN_SESSIONS} جلسة`;return r;}
+function _status(dl){return dl<0?{k:'expired',cls:'bad',txt:`منتهي منذ ${-dl} يوم`,dl}:dl<=7?{k:'soon',cls:'warn',txt:dl===0?'ينتهي اليوم':`باقي ${dl} يوم`,dl}:{k:'active',cls:'ok',txt:`باقي ${dl} يوم`,dl};}
 function scheduledOn(s,dayIdx){const t=norm(s.schedule);return DAYS[dayIdx].stems.some(st=>t.includes(st));}
 function lvStyle(l){return`--lv:${LV_VAR[l]||'var(--lv-1)'}`;}
 function lvPill(l){return`<span class="lvl${l==='نخبة'?' lv-5-text':''}" style="${lvStyle(l)}">${esc(l||'—')}</span>`;}
@@ -740,8 +744,8 @@ function openSwimmer(id){
     <div class="sheet-body">
       <div class="trio">
         <div class="stat"><b class="num"><bdi>${a.pct===null?'—':a.pct+'%'}</bdi></b><span>الحضور (${a.p}/${a.n})</span></div>
-        <div class="stat"><b class="num" style="color:var(--${st.cls==='ok'?'ok':st.cls==='warn'?'warn':'bad'})">${st.dl<0?'منتهي':st.dl}</b><span>${st.dl<0?'منذ '+(-st.dl)+' يوم':'يوم متبقٍ'}</span></div>
-        <div class="stat"><b class="num">${Number(s.fee||0).toLocaleString('en-US')}</b><span>جنيه / ${s.duration||1} شهر</span></div>
+        <div class="stat"><b class="num" style="color:var(--${st.cls==='ok'?'ok':st.cls==='warn'?'warn':'bad'})"><bdi>${st.left}/${PLAN_SESSIONS}</bdi></b><span>جلسات متبقية · ${st.dl<0?'انتهى منذ '+(-st.dl)+' يوم':st.dl+' يوم'}</span></div>
+        <div class="stat"><b class="num">${Number(s.fee||0).toLocaleString('en-US')}</b><span>جنيه / ${PLAN_SESSIONS} جلسات شهريًا</span></div>
       </div>
       <div class="actions">
         <a class="act${tel?'':' off'}" ${tel?`href="tel:${esc(tel)}"`:''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>اتصال</a>
@@ -787,9 +791,9 @@ async function toggleSession(id,i){const s=swimmers.find(x=>x.id===id);if(!s)ret
 async function addSession(id,v){const s=swimmers.find(x=>x.id===id);if(!s)return;await patchSwimmer(id,{attendance:[...s.attendance,v]},v?'سُجّلت جلسة حضور':'سُجّلت جلسة غياب');openSwimmer(id);render();}
 async function renew(id){
   const s=swimmers.find(x=>x.id===id);if(!s)return;
-  const st=status(s),start=st.dl<0?todayISO():expiryOf(s),end=addMonths(start,s.duration||1);
-  if(!confirm(`تجديد اشتراك ${s.name} لمدة ${s.duration||1} شهر\nمن ${fmtDate(start)} إلى ${fmtDate(end)}\nالرسوم: ${s.fee||0} جنيه`))return;
-  await patchSwimmer(id,{start_date:start},'تم تجديد الاشتراك');openSwimmer(id);render();
+  const st=status(s),start=(st.dl<0||st.done)?todayISO():expiryOf(s),end=addMonths(start,1);
+  if(!confirm(`تجديد اشتراك ${s.name}: باقة ${PLAN_SESSIONS} جلسات / شهر\nمن ${fmtDate(start)} إلى ${fmtDate(end)}\nالرسوم: ${s.fee||0} جنيه`))return;
+  await patchSwimmer(id,{start_date:start,sessions_base:(s.attendance||[]).length},'تم تجديد الاشتراك');openSwimmer(id);render();
 }
 async function deleteSwimmer(id){
   const s=swimmers.find(x=>x.id===id);if(!s)return;
@@ -819,7 +823,7 @@ function toggleDay(i){
 function openForm(){editId=null;clearForm();$('form-title').textContent='سباح جديد';$('save-btn').textContent='حفظ السباح';go('form');$('s-name').focus();}
 function clearForm(){
   ['s-name','s-dob','s-parent','s-phone','s-branch','s-fee','s-schedule','s-notes'].forEach(id=>{$(id).value='';$(id).classList.remove('bad-input');});
-  $('s-level').value='مبتدئ';$('s-coach').value='';$('s-duration').value='1';$('s-start').value=todayISO();syncDayChips();
+  $('s-level').value='مبتدئ';$('s-coach').value='';$('s-start').value=todayISO();syncDayChips();
 }
 function editSwimmer(id){
   const s=swimmers.find(x=>x.id===id);if(!s)return;
@@ -828,8 +832,7 @@ function editSwimmer(id){
   $('s-parent').value=s.parent||'';$('s-phone').value=s.phone||'';
   if(s.coach&&!coaches.some(c=>c.name===s.coach))$('s-coach').insertAdjacentHTML('beforeend',`<option value="${esc(s.coach)}">${esc(s.coach)} (غير مسجّل)</option>`);
   $('s-coach').value=s.coach||'';$('s-branch').value=branchLabel(s.branch);$('s-start').value=s.start_date||todayISO();
-  const dur=String(s.duration||1);if(![...$('s-duration').options].some(o=>o.value===dur))$('s-duration').insertAdjacentHTML('beforeend',`<option value="${dur}">${dur} شهور</option>`);
-  $('s-duration').value=dur;$('s-fee').value=s.fee||'';$('s-schedule').value=s.schedule||'';$('s-notes').value=s.notes||'';
+  $('s-fee').value=s.fee||'';$('s-schedule').value=s.schedule||'';$('s-notes').value=s.notes||'';
   syncDayChips();$('form-title').textContent='تعديل: '+s.name;$('save-btn').textContent='حفظ التعديلات';
 }
 function cancelForm(){const id=editId;editId=null;go(id?'swimmers':'swimmers');if(id)openSwimmer(id);}
@@ -838,7 +841,7 @@ async function saveSwimmer(){
   req.forEach(id=>{const bad=!$(id).value.trim();$(id).classList.toggle('bad-input',bad);if(bad)miss=true;});
   if(miss){toast('أكمل الاسم وتاريخ الميلاد وبداية الاشتراك.',true);return;}
   if($('s-dob').value>todayISO()){$('s-dob').classList.add('bad-input');toast('تاريخ الميلاد في المستقبل. راجع السنة.',true);return;}
-  const data={name:$('s-name').value.trim(),dob:$('s-dob').value,level:$('s-level').value,coach:$('s-coach').value,parent:$('s-parent').value.trim(),phone:$('s-phone').value.trim(),start_date:$('s-start').value,duration:parseInt($('s-duration').value)||1,fee:parseInt($('s-fee').value)||0,branch:$('s-branch').value.trim(),schedule:$('s-schedule').value.trim(),notes:$('s-notes').value};
+  const data={name:$('s-name').value.trim(),dob:$('s-dob').value,level:$('s-level').value,coach:$('s-coach').value,parent:$('s-parent').value.trim(),phone:$('s-phone').value.trim(),start_date:$('s-start').value,duration:1,fee:parseInt($('s-fee').value)||0,branch:$('s-branch').value.trim(),schedule:$('s-schedule').value.trim(),notes:$('s-notes').value};
   if(!editId){
     const dup=swimmers.find(s=>norm(s.name)===norm(data.name)&&s.dob===data.dob);
     if(dup&&!confirm(`يوجد سباح بنفس الاسم وتاريخ الميلاد (${dup.name}). إضافة سجل جديد على أي حال؟`))return;
@@ -942,7 +945,7 @@ function renderReports(){
   const active=st.filter(x=>x.st.k!=='expired'),soon=st.filter(x=>x.st.k==='soon'),expired=st.filter(x=>x.st.k==='expired');
   const withAtt=swimmers.map(attOf).filter(a=>a.n);
   const avg=withAtt.length?Math.round(withAtt.reduce((x,a)=>x+a.pct,0)/withAtt.length):null;
-  const revenue=active.reduce((x,{s})=>x+(Number(s.fee)||0)/(s.duration||1),0);
+  const revenue=active.reduce((x,{s})=>x+(Number(s.fee)||0),0);
   const lv=LEVELS.map(l=>[l,swimmers.filter(s=>s.level===l).length]).filter(e=>e[1]);
   const cm={};swimmers.forEach(s=>{const k=s.coach||'بدون مدرب';cm[k]=(cm[k]||0)+1;});
   const bm={};swimmers.forEach(s=>{const k=branchKey(s.branch);const l=k?branchLabel(s.branch):'غير محدد';bm[k]=bm[k]||[l,0];bm[k][1]++;});
